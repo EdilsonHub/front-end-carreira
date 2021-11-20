@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@mui/material';
 import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
+
 
 interface dadosFormulario {
     nome: string,
@@ -9,14 +10,11 @@ interface dadosFormulario {
     tempo: string
 }
 
-interface arrayDataFormulario {
-    dados: dadosFormulario[]
-}
-
 function CadastroProjetosLayout() {
     const [arrayData, setArrayData] = useState<dadosFormulario[]>([]);
 
     function submit(dados: dadosFormulario): void {
+        console.log(dados)
         setArrayData([...arrayData, dados]);
     }
 
@@ -30,8 +28,8 @@ function CadastroProjetosLayout() {
                 </Divider>
                 <Grid item xs>
                     {
-                        arrayData.map((dados: dadosFormulario) => (
-                            <Card sx={{ margin: '15px' }} >
+                        arrayData.map((dados: dadosFormulario, index: number) => (
+                            <Card key={index.toString()} sx={{ margin: '15px' }} >
                                 <CardActionArea>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
@@ -45,7 +43,7 @@ function CadastroProjetosLayout() {
 
                             </Card>
                         ))
-                }
+                    }
                 </Grid>
                 <Divider orientation="vertical" flexItem>
                 </Divider>

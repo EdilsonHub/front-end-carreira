@@ -1,7 +1,9 @@
-import React, { FormEventHandler } from "react";
+import React from "react";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 interface IProps {
     submit: Function
@@ -25,11 +27,11 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            submit(values);
+            submit({...values, dataLimite});
             formik.resetForm();
         },
     });
-
+    const [dataLimite, setDataLimite] = React.useState<Date | null>(new Date());
 
     return (
         <Paper sx={{ padding: '20px 20px 5px 5px' }} elevation={0} >
@@ -61,7 +63,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         id="formulario-projeto-descricao"
                         label="Descrição do projeto"
                         multiline
-                        maxRows={8}
+                        // maxRows={8}
                         rows={4}
                         fullWidth
                         placeholder="Digite a descrição do projeto"
@@ -98,6 +100,22 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         error={formik.touched.tempo && Boolean(formik.errors.tempo)}
                         helperText={formik.touched.tempo && formik.errors.tempo}
                     />
+
+
+
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <MobileDateTimePicker
+                            
+                            label="Data limite"
+                            value={dataLimite}
+                            onChange={(data) => {
+                                setDataLimite(data);
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                        
+                    </LocalizationProvider>
+
                 </div>
                 <Button type="submit" sx={{ margin: '20px 20px 5px 5px' }} fullWidth variant="contained" size="medium">Salvar</Button>
             </Box>
