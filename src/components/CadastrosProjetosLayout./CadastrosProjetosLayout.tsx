@@ -14,7 +14,7 @@ function CadastroProjetosLayout() {
     const [arrayData, setArrayData] = useState<dadosFormulario[]>([]);
 
     function submit(dados: dadosFormulario): void {
-        console.log(dados)
+        alert(JSON.stringify(dados))
         setArrayData([...arrayData, dados]);
     }
 

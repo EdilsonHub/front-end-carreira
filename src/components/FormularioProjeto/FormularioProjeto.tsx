@@ -1,9 +1,11 @@
 import React from "react";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Collapse, FormControlLabel, FormGroup, Grid, Paper, Portal, Switch, TextField, Typography } from "@mui/material";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+
+import { styled } from '@mui/material/styles';
 
 interface IProps {
     submit: Function
@@ -27,11 +29,26 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            submit({...values, dataLimite});
+            submit({ ...values, dataLimite });
             formik.resetForm();
         },
     });
+
     const [dataLimite, setDataLimite] = React.useState<Date | null>(new Date());
+    const [ativarDataLimite, setAtivarDataLimite] = React.useState<boolean>(false);
+    const [cadastrarAgenda, setCadastrarAgenda] = React.useState<boolean>(false);
+
+
+    const Item = styled(Paper)(({ theme }) => ({
+        ...theme.typography.body2,
+        padding: theme.spacing(0),
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        marginRight: theme.spacing(-1),
+        marginLeft: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
 
     return (
         <Paper sx={{ padding: '20px 20px 5px 5px' }} elevation={0} >
@@ -58,6 +75,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         onChange={formik.handleChange}
                         error={formik.touched.nome && Boolean(formik.errors.nome)}
                         helperText={formik.touched.nome && formik.errors.nome}
+                        size="small"
                     />
                     <TextField
                         id="formulario-projeto-descricao"
@@ -73,6 +91,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         onChange={formik.handleChange}
                         error={formik.touched.descricao && Boolean(formik.errors.descricao)}
                         helperText={formik.touched.descricao && formik.errors.descricao}
+                        size="small"
                     />
                     <TextField
                         id="formulario-projeto-custo"
@@ -86,6 +105,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         onChange={formik.handleChange}
                         error={formik.touched.custo && Boolean(formik.errors.custo)}
                         helperText={formik.touched.custo && formik.errors.custo}
+                        size="small"
                     />
                     <TextField
                         id="formulario-projeto-tempo"
@@ -99,23 +119,70 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         onChange={formik.handleChange}
                         error={formik.touched.tempo && Boolean(formik.errors.tempo)}
                         helperText={formik.touched.tempo && formik.errors.tempo}
+                        size="small"
                     />
+                    <Item>
+                        <Grid container xs>
+                            <Grid item xs={6} alignContent="baseline">
+                                <FormControlLabel control={
+                                    <Switch name="ativarDataLimite" checked={ativarDataLimite} onChange={(event) => setAtivarDataLimite(event.target.checked)} />
+                                } label="Ativar data Limite" />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControlLabel control={
+                                    <Switch name="cadastrarAgenda" checked={cadastrarAgenda} onChange={(event) => setCadastrarAgenda(event.target.checked)} />
+                                } label="Cadastrar agenda" />
+                            </Grid>
+                        </Grid>
+                    </Item>
+                    <Collapse in={ativarDataLimite} >
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <MobileDateTimePicker
+                                disabled={false}
+                                label="Data limite"
+                                value={dataLimite}
+                                onChange={(data) => {
+                                    setDataLimite(data);
+                                }}
+                                renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
+                            />
 
+                        </LocalizationProvider>
+                </Collapse>
 
+                <Collapse in={cadastrarAgenda} >
+                            <Grid container xs>
+                                <Grid item xs={6} alignContent="baseline">
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <MobileDateTimePicker
+                                            disabled={false}
+                                            label="Inicio agenda"
+                                            value={dataLimite}
+                                            onChange={(data) => {
+                                                setDataLimite(data);
+                                            }}
+                                            renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
 
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <MobileDateTimePicker
-                            
-                            label="Data limite"
-                            value={dataLimite}
-                            onChange={(data) => {
-                                setDataLimite(data);
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                        
-                    </LocalizationProvider>
+                                        />
 
+                                    </LocalizationProvider>
+                                    </Grid>
+                                    <Grid item xs={6} alignContent="baseline">
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <MobileDateTimePicker
+                                            disabled={false}
+                                            label="Fim Agenda"
+                                            value={dataLimite}
+                                            onChange={(data) => {
+                                                setDataLimite(data);
+                                            }}
+                                            renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
+                                        />
+
+                                    </LocalizationProvider>
+                                </Grid>
+                            </Grid>
+                </Collapse>
                 </div>
                 <Button type="submit" sx={{ margin: '20px 20px 5px 5px' }} fullWidth variant="contained" size="medium">Salvar</Button>
             </Box>
