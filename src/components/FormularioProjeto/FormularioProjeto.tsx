@@ -5,6 +5,8 @@ import * as yup from 'yup';
 import { LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
+import NumberFormat, { NumberFormatProps } from 'react-number-format';
+
 import { styled } from '@mui/material/styles';
 
 interface IProps {
@@ -93,20 +95,65 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         helperText={formik.touched.descricao && formik.errors.descricao}
                         size="small"
                     />
-                    <TextField
-                        id="formulario-projeto-custo"
-                        label="Custo previsto (R$)"
-                        multiline
-                        maxRows={4}
-                        fullWidth
-                        placeholder="Digite o custo previsto do projeto"
-                        name="custo"
+
+                    <NumberFormat
                         value={formik.values.custo}
-                        onChange={formik.handleChange}
-                        error={formik.touched.custo && Boolean(formik.errors.custo)}
-                        helperText={formik.touched.custo && formik.errors.custo}
-                        size="small"
+                        displayType={'input'}
+                        
+                        thousandSeparator="."
+                        decimalSeparator=","
+
+                        // fixedDecimalScale={true}
+                        allowNegative={false}
+
+                        allowedDecimal=","
+
+                        
+                        
+                        decimalScale={2}
+                        defaultValue={0}
+                        // dir="rtl"
+                        name="custo"
+                        customInput={props => <TextField {...props} size="small" /> }
+
+                        onBlur={formik.handleChange}
+
+                        prefix={'R$ '}
+
+
+                            id="formulario-projeto-custo"
+                            label="Custo previsto (R$)"
+                            multiline
+                            maxRows={4}
+                            fullWidth
+                            placeholder="Digite o custo previsto do projeto"
+                        //     name="custo"
+                        //     value={value}
+                        //     onChange={formik.handleChange}
+                            error={formik.touched.custo && Boolean(formik.errors.custo)}
+                            helperText={formik.touched.tempo && formik.errors.tempo}
+                            // size="small"
+
+
+                        // renderText={(value) => (<TextField
+
+                        //     id="formulario-projeto-custo"
+                        //     label="Custo previsto (R$)"
+                        //     multiline
+                        //     maxRows={4}
+                        //     fullWidth
+                        //     placeholder="Digite o custo previsto do projeto"
+                        //     name="custo"
+                        //     value={value}
+                        //     onChange={formik.handleChange}
+                        //     error={formik.touched.custo && Boolean(formik.errors.custo)}
+                        //     helperText={formik.touched.tempo && formik.errors.tempo}
+                        //     size="small"
+
+
+                        // />)}
                     />
+
                     <TextField
                         id="formulario-projeto-tempo"
                         label="Tempo previsto"
@@ -144,45 +191,45 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                                 onChange={(data) => {
                                     setDataLimite(data);
                                 }}
-                                renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
+                                renderInput={(params) => { params['size'] = 'small'; return <TextField {...params} /> }}
                             />
 
                         </LocalizationProvider>
-                </Collapse>
+                    </Collapse>
 
-                <Collapse in={cadastrarAgenda} >
-                            <Grid container xs>
-                                <Grid item xs={6} alignContent="baseline">
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <MobileDateTimePicker
-                                            disabled={false}
-                                            label="Inicio agenda"
-                                            value={dataLimite}
-                                            onChange={(data) => {
-                                                setDataLimite(data);
-                                            }}
-                                            renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
+                    <Collapse in={cadastrarAgenda} >
+                        <Grid container xs>
+                            <Grid item xs={6} alignContent="baseline">
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <MobileDateTimePicker
+                                        disabled={false}
+                                        label="Inicio agenda"
+                                        value={dataLimite}
+                                        onChange={(data) => {
+                                            setDataLimite(data);
+                                        }}
+                                        renderInput={(params) => { params['size'] = 'small'; return <TextField {...params} /> }}
 
-                                        />
+                                    />
 
-                                    </LocalizationProvider>
-                                    </Grid>
-                                    <Grid item xs={6} alignContent="baseline">
-                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                        <MobileDateTimePicker
-                                            disabled={false}
-                                            label="Fim Agenda"
-                                            value={dataLimite}
-                                            onChange={(data) => {
-                                                setDataLimite(data);
-                                            }}
-                                            renderInput={(params) =>{ params['size'] = 'small'; return <TextField {...params} />}}
-                                        />
-
-                                    </LocalizationProvider>
-                                </Grid>
+                                </LocalizationProvider>
                             </Grid>
-                </Collapse>
+                            <Grid item xs={6} alignContent="baseline">
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <MobileDateTimePicker
+                                        disabled={false}
+                                        label="Fim Agenda"
+                                        value={dataLimite}
+                                        onChange={(data) => {
+                                            setDataLimite(data);
+                                        }}
+                                        renderInput={(params) => { params['size'] = 'small'; return <TextField {...params} /> }}
+                                    />
+
+                                </LocalizationProvider>
+                            </Grid>
+                        </Grid>
+                    </Collapse>
                 </div>
                 <Button type="submit" sx={{ margin: '20px 20px 5px 5px' }} fullWidth variant="contained" size="medium">Salvar</Button>
             </Box>
