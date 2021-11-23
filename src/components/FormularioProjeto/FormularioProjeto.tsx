@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Button, Collapse, FormControlLabel, FormGroup, Grid, Paper, Portal, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Collapse, Divider, FormControlLabel, FormGroup, Grid, Paper, Portal, Switch, TextField, Typography } from "@mui/material";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
+import { DatePicker, LocalizationProvider, MobileDateTimePicker } from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import ptBR from 'date-fns/locale/pt-BR';
 
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 
@@ -32,6 +33,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
         validationSchema: validationSchema,
         onSubmit: (values) => {
             submit({ ...values, dataLimite });
+            console.log(AdapterDateFns);
             formik.resetForm();
         },
     });
@@ -96,78 +98,117 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         size="small"
                     />
 
+                    <Grid container spacing={2}>
+                        <Grid item xs={3} >
+                            <TextField
+                                // id="formulario-projeto-tempo"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                label="Mêses"
+                                fullWidth
+                                // placeholder="Tempo previsto"
+                                InputProps={{ inputProps: { min: "0", step: "1" } }}
+                                name="tempo"
+                                value={formik.values.tempo}
+                                onChange={formik.handleChange}
+                                error={formik.touched.tempo && Boolean(formik.errors.tempo)}
+                                helperText={formik.touched.tempo && formik.errors.tempo}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={3} >
+                            <TextField
+                                // id="formulario-projeto-tempo"
+                                label="Dias"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                fullWidth
+                                InputProps={{ inputProps: { min: "0", max: "30", step: "1" } }}
+                                // placeholder="Digite o tempo provavelmente gasto no projeto"
+                                name="tempo"
+                                value={formik.values.tempo}
+                                onChange={formik.handleChange}
+                                error={formik.touched.tempo && Boolean(formik.errors.tempo)}
+                                helperText={formik.touched.tempo && formik.errors.tempo}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={3} >
+                            <TextField
+                                // id="formulario-projeto-tempo"
+                                label="Horas"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                fullWidth
+                                InputProps={{ inputProps: { min: "0", max: "23", step: "1" } }}
+                                // placeholder="Digite o tempo provavelmente gasto no projeto"
+                                name="tempo"
+                                value={formik.values.tempo}
+                                onChange={formik.handleChange}
+                                error={formik.touched.tempo && Boolean(formik.errors.tempo)}
+                                helperText={formik.touched.tempo && formik.errors.tempo}
+                                size="small"
+                            />
+                        </Grid>
+                        <Grid item xs={3} >
+
+                            <TextField
+                                // id="formulario-projeto-tempo"
+                                label="Minutos"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                  }}
+                                fullWidth
+                                InputProps={{ inputProps: { min: "0", max: "59", step: "1" } }}
+                                // placeholder="Digite o tempo provavelmente gasto no projeto"
+                                name="tempo"
+                                value={formik.values.tempo}
+                                onChange={formik.handleChange}
+                                error={formik.touched.tempo && Boolean(formik.errors.tempo)}
+                                helperText={formik.touched.tempo && formik.errors.tempo}
+                                size="small"
+                            />
+                        </Grid>
+                    </Grid>
+
+
+
                     <NumberFormat
                         value={formik.values.custo}
                         displayType={'input'}
-                        
                         thousandSeparator="."
                         decimalSeparator=","
-
-                        // fixedDecimalScale={true}
                         allowNegative={false}
-
                         allowedDecimal=","
-
-                        
-                        
                         decimalScale={2}
                         defaultValue={0}
                         // dir="rtl"
                         name="custo"
-                        customInput={props => <TextField {...props} size="small" /> }
+                        customInput={props => <TextField {...props} size="small" />}
 
                         onBlur={formik.handleChange}
 
                         prefix={'R$ '}
 
 
-                            id="formulario-projeto-custo"
-                            label="Custo previsto (R$)"
-                            multiline
-                            maxRows={4}
-                            fullWidth
-                            placeholder="Digite o custo previsto do projeto"
-                        //     name="custo"
-                        //     value={value}
-                        //     onChange={formik.handleChange}
-                            error={formik.touched.custo && Boolean(formik.errors.custo)}
-                            helperText={formik.touched.tempo && formik.errors.tempo}
-                            // size="small"
-
-
-                        // renderText={(value) => (<TextField
-
-                        //     id="formulario-projeto-custo"
-                        //     label="Custo previsto (R$)"
-                        //     multiline
-                        //     maxRows={4}
-                        //     fullWidth
-                        //     placeholder="Digite o custo previsto do projeto"
-                        //     name="custo"
-                        //     value={value}
-                        //     onChange={formik.handleChange}
-                        //     error={formik.touched.custo && Boolean(formik.errors.custo)}
-                        //     helperText={formik.touched.tempo && formik.errors.tempo}
-                        //     size="small"
-
-
-                        // />)}
-                    />
-
-                    <TextField
-                        id="formulario-projeto-tempo"
-                        label="Tempo previsto"
+                        id="formulario-projeto-custo"
+                        label="Custo previsto (R$)"
                         multiline
                         maxRows={4}
                         fullWidth
-                        placeholder="Digite o tempo provavelmente gasto no projeto"
-                        name="tempo"
-                        value={formik.values.tempo}
-                        onChange={formik.handleChange}
-                        error={formik.touched.tempo && Boolean(formik.errors.tempo)}
+                        placeholder="Digite o custo previsto do projeto"
+                        error={formik.touched.custo && Boolean(formik.errors.custo)}
                         helperText={formik.touched.tempo && formik.errors.tempo}
-                        size="small"
                     />
+
+
                     <Item>
                         <Grid container xs>
                             <Grid item xs={6} alignContent="baseline">
@@ -183,7 +224,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                         </Grid>
                     </Item>
                     <Collapse in={ativarDataLimite} >
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
                             <MobileDateTimePicker
                                 disabled={false}
                                 label="Data limite"
@@ -200,11 +241,12 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                     <Collapse in={cadastrarAgenda} >
                         <Grid container xs>
                             <Grid item xs={6} alignContent="baseline">
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
                                     <MobileDateTimePicker
                                         disabled={false}
                                         label="Inicio agenda"
                                         value={dataLimite}
+                                        
                                         onChange={(data) => {
                                             setDataLimite(data);
                                         }}
@@ -215,7 +257,7 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                                 </LocalizationProvider>
                             </Grid>
                             <Grid item xs={6} alignContent="baseline">
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
                                     <MobileDateTimePicker
                                         disabled={false}
                                         label="Fim Agenda"
@@ -233,7 +275,6 @@ const FormularioProjeto: React.FC<IProps> = ({ submit }): React.ReactElement => 
                 </div>
                 <Button type="submit" sx={{ margin: '20px 20px 5px 5px' }} fullWidth variant="contained" size="medium">Salvar</Button>
             </Box>
-
         </Paper>
     );
 
