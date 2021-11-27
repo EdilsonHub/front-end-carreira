@@ -20,13 +20,13 @@ function CadastroProjetosLayout() {
 
     return (
         <>
-            <Grid container>
-                <Grid item xs>
+            <Grid container className="coisas">
+                <Grid xs>
 
                 </Grid>
                 <Divider orientation="vertical" flexItem >
                 </Divider>
-                <Grid item xs>
+                <Grid xs>
                     {
                         arrayData.map((dados: dadosFormulario, index: number) => (
                             <Card key={index.toString()} sx={{ margin: '15px' }} >
@@ -47,7 +47,7 @@ function CadastroProjetosLayout() {
                 </Grid>
                 <Divider orientation="vertical" flexItem>
                 </Divider>
-                <Grid item xs>
+                <Grid xs>
                     <FormularioProjeto submit={submit} />
                 </Grid>
             </Grid>
