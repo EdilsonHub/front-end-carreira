@@ -1,18 +1,16 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { useContext } from 'react';
 import { TextField } from '@mui/material';
+import { FormularioProjetoContext, IValuesFormik } from '../FormularioProjetoContext';
+import { FormikProps } from 'formik';
 
-interface IProps {
-    value?: string;
-    onChange?: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
-    error?: boolean | undefined;
-    helperText?: string | false | undefined;
-}
+const Descricao: React.FC = () => {
+    const formik = useContext<FormikProps<IValuesFormik> | null | undefined>(FormularioProjetoContext);
+    if (!formik) {
+        return (
+            <div>O component Descricao não pode ser carregado!</div>
+        );
+    }
 
-// interface IProps {
-//     controller: IController;
-// };
-
-const Descricao: React.FC<IProps> = ({ value, onChange, error, helperText }) => {
     return (<TextField
         id="formulario-projeto-descricao"
         label="Descrição do projeto"
@@ -21,11 +19,12 @@ const Descricao: React.FC<IProps> = ({ value, onChange, error, helperText }) => 
         fullWidth
         placeholder="Digite a descrição do projeto"
         name="descricao"
-        value={value}
-        onChange={onChange}
-        error={error}
-        helperText={helperText}
         size="small"
+
+        value={formik.values.descricao}
+        onChange={formik.handleChange}
+        error={formik.touched.descricao && Boolean(formik.errors.descricao)}
+        helperText={formik.touched.descricao && formik.errors.descricao}
     />);
 }
 

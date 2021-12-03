@@ -1,32 +1,35 @@
-import React, { ChangeEventHandler } from 'react';
+import React, { ChangeEventHandler, Context, ProviderProps, useContext } from 'react';
 import { TextField } from '@mui/material';
+import { FormularioProjetoContext, IValuesFormik } from '../FormularioProjetoContext';
+import { FormikProps } from 'formik';
 
-interface IProps {
-    value: string;
-    onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
-    error: boolean | undefined;
-    helperText: string | false | undefined;
+const Nome = () => {
+    const formik = useContext<FormikProps<IValuesFormik> | null | undefined>(FormularioProjetoContext);
+    if (!formik) {
+        return (
+            <div>O component Nome não pode ser carregado!</div>
+        )
+    }
+
+    return (
+        <TextField
+            id="formulario-projeto-nome"
+            label="Nome do Projeto"
+            multiline
+            maxRows={4}
+            fullWidth
+            placeholder="Digite o nome do projeto"
+            name="nome"
+            size="small"
+
+            value={formik.values.nome}
+            onChange={formik.handleChange}
+            error={formik.touched.nome && Boolean(formik.errors.nome)}
+            helperText={formik.touched.nome && formik.errors.nome}
+        />
+    );
 }
 
-// interface IProps {
-//     controller: IController;
-// };
+export default Nome;
 
-const Nome: React.FC<IProps> = ({ value, onChange, error, helperText }) => {
-    return (<TextField
-        id="formulario-projeto-nome"
-        label="Nome do Projeto"
-        multiline
-        maxRows={4}
-        fullWidth
-        placeholder="Digite o nome do projeto"
-        name="nome"
-        value={value}
-        onChange={onChange}
-        error={error}
-        helperText={helperText}
-        size="small"
-    />);
-}
 
-    export default Nome;

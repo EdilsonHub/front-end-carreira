@@ -48,7 +48,7 @@ function CadastroProjetosLayout() {
                 <Divider orientation="vertical" flexItem>
                 </Divider>
                 <Grid xs>
-                    <FormularioProjeto submit={submit} />
+                    <FormularioProjeto />
                 </Grid>
             </Grid>
         </>
