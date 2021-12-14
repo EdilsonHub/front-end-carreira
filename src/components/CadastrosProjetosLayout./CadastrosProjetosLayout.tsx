@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@mui/material';
 import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
+import FormulariosProjeto from "../Formularios/FormulariosProjeto/";
 
 
 interface dadosFormulario {
@@ -22,7 +23,7 @@ function CadastroProjetosLayout() {
         <>
             <Grid container className="coisas">
                 <Grid xs>
-
+                <FormulariosProjeto />
                 </Grid>
                 <Divider orientation="vertical" flexItem >
                 </Divider>
