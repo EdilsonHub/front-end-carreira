@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@mui/material';
 import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
-import FormulariosProjeto from "../Formularios/FormulariosProjeto/";
+import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
 
-
-interface dadosFormulario {
-    nome: string,
-    custo: string,
-    descricao: string,
-    tempo: string
-}
 
 function CadastroProjetosLayout() {
-    const [arrayData, setArrayData] = useState<dadosFormulario[]>([]);
+    const [arrayData, setArrayData] = useState<IDadosFormulario[]>([]);
 
-    function submit(dados: dadosFormulario): void {
-        alert(JSON.stringify(dados))
+    function submit(dados: IDadosFormulario): void {
         setArrayData([...arrayData, dados]);
     }
 
@@ -23,13 +15,13 @@ function CadastroProjetosLayout() {
         <>
             <Grid container className="coisas">
                 <Grid xs>
-                <FormulariosProjeto />
+
                 </Grid>
                 <Divider orientation="vertical" flexItem >
                 </Divider>
                 <Grid xs>
                     {
-                        arrayData.map((dados: dadosFormulario, index: number) => (
+                        arrayData.map((dados: IDadosFormulario, index: number) => (
                             <Card key={index.toString()} sx={{ margin: '15px' }} >
                                 <CardActionArea>
                                     <CardContent>
@@ -39,6 +31,7 @@ function CadastroProjetosLayout() {
                                         <Typography variant="body2" color="text.secondary">
                                             {dados.descricao}
                                         </Typography>
+                                            <pre>{JSON.stringify(dados).replaceAll(",",",\n").replaceAll("\}","\n\}").replaceAll("\{","\{\n")}</pre>
                                     </CardContent>
                                 </CardActionArea>
 
@@ -49,7 +42,7 @@ function CadastroProjetosLayout() {
                 <Divider orientation="vertical" flexItem>
                 </Divider>
                 <Grid xs>
-                    <FormularioProjeto />
+                    <FormProjeto onSubmit={submit} />
                 </Grid>
             </Grid>
         </>
