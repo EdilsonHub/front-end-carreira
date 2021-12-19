@@ -11,13 +11,15 @@ import { isDate } from 'date-fns';
 
 
 export interface IDadosFormulario {
+    id: string;
     nome: string;
     custoPrevisto: string;
     descricao: string;
-    tempo: string;
     dataLimite: string;
-    inicioAgenda: string;
-    fimAgenda: string;
+    agenda: {
+        inicio: string;
+        fim: string;
+    }
     tempoPrevisto: {
         meses: string;
         dias: string;
@@ -68,6 +70,7 @@ const FormProjeto: React.FC<IProps> = ({ onSubmit }) => {
     return (
         <BoxFormulario titulo="Cadastro de Projetos">
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={{ nome: '' }} ref={formRef} >
+                <TextField id="id" name="id" label="ID oculto" placeholder="ID oculto da aldeia da folha" maxRows={4} multiline={true} />
                 <TextField id="nome" name="nome" label="Nome do projeto" placeholder="Digite o nome do projeto" maxRows={4} multiline={true} />
                 <TextField id="descricao" name="descricao" label="Descrição" placeholder="Digite aqui os detalhes do projeto" rows={4} multiline={true} />
                 <Scope path='tempoPrevisto'>
@@ -86,15 +89,17 @@ const FormProjeto: React.FC<IProps> = ({ onSubmit }) => {
                 </Scope>
                 <NumberFormat id="custoPrevisto" name="custoPrevisto" label="Custo Previsto (R$)" placeholder="Digite o custo previsto" />
                 <DateTimePicker label="Data limite" name="dataLimite" />
-                
-                <Grid container spacing="15">
-                    <Grid item xs={6} >
-                        <DateTimePicker label="Inicio Agenda" name="inicioAgenda" />
+
+                <Scope path='agenda'>
+                    <Grid container spacing="15">
+                        <Grid item xs={6} >
+                            <DateTimePicker label="Inicio Agenda" name="inicio" />
+                        </Grid>
+                        <Grid item xs={6} >
+                            <DateTimePicker label="Fim Agenda" name="fim" />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6} >
-                        <DateTimePicker label="Fim Agenda" name="fimAgenda" />
-                    </Grid>
-                </Grid>
+                </Scope>
 
                 <Button sx={{ margin: 1 }} type="submit" fullWidth variant="contained" size="medium">Salvar</Button>
             </Form>
