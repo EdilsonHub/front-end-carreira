@@ -3,6 +3,7 @@ import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@m
 import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
 import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
 import ListaProjeto, { Projeto } from "../Projetos";
+import SwipeableTemporaryDrawer from "../Teste";
 
 
 function valoresPrevios(): IDadosFormulario {
@@ -45,8 +46,10 @@ function CadastroProjetosLayout() {
                 </Grid>
             </Grid> */}
             <Projeto {...valoresPrevios()} >
-                <ListaProjeto dados={[...arrayData, ...arrayData]}/>
-                </Projeto>
+                <ListaProjeto dados={[...arrayData, ...arrayData]} />
+            </Projeto>
+
+            <SwipeableTemporaryDrawer />
         </div>
 
     );

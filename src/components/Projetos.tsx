@@ -35,9 +35,9 @@ interface IDetalhes {
     value: string;
     label: string;
 }
-const Detalhes: React.FC<IDetalhes> = ({ value, label }) => {
+const Detalhes: React.FC<IDetalhes> = ({ value, label, ...rest }) => {
     return (
-        <Typography paragraph sx={{ color: 'text.secondary', textAlign: 'justify' }}>
+        <Typography paragraph sx={{ color: 'text.secondary', textAlign: 'justify' }} {...rest} >
             <Typography component="span" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                 {label}
             </Typography>
@@ -80,7 +80,7 @@ export const Projeto: React.FC<IPropsItemLista> = ({ children, nome, descricao, 
     const labelBtnAgenda = agendaString ? 'Editar Agenda' : 'Agendar'
 
     return (
-        <Accordion expanded={detalhado} key={key} onChange={() => setDetalhado(prev => !prev)}>
+        <Accordion disableGutters expanded={detalhado} key={key} onChange={() => setDetalhado(prev => !prev)}>
 
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
