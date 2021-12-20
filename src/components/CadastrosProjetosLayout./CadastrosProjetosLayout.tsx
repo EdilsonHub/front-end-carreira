@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@mui/material';
 import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
 import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
-import Projetos from "../Projetos";
+import ListaProjeto, { Projeto } from "../Projetos";
 
 
 function valoresPrevios(): IDadosFormulario {
@@ -34,16 +34,19 @@ function CadastroProjetosLayout() {
 
     return (
         <div style={{ backgroundColor: '#f5f5f5' }}>
-            <Grid container className="coisas">
+            {/* <Grid container className="coisas">
                 <Grid xs>
-                    <Projetos dados={arrayData} />
+                    <ListaProjeto dados={arrayData} />
                 </Grid>
                 <Divider orientation="vertical" flexItem>
                 </Divider>
                 <Grid xs>
                     <FormProjeto onSubmit={submit} />
                 </Grid>
-            </Grid>
+            </Grid> */}
+            <Projeto {...valoresPrevios()} >
+                <ListaProjeto dados={[...arrayData, ...arrayData]}/>
+                </Projeto>
         </div>
 
     );
