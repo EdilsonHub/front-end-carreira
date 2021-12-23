@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Card, CardActionArea, CardContent, Divider, Grid, Typography } from '@mui/material';
-import FormularioProjeto from '../FormularioProjeto/FormularioProjeto';
+
 import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
-import ListaProjeto, { Projeto } from "../Projetos";
-import SwipeableTemporaryDrawer from "../Teste";
+import { ListaProjeto, Projeto } from "../Projetos";
+
+
+import { useDispatch } from 'react-redux';
+
+
+import { salvar } from '../../store/FormProjeto.store';
 
 
 function valoresPrevios(): IDadosFormulario {
@@ -29,8 +33,10 @@ function valoresPrevios(): IDadosFormulario {
 function CadastroProjetosLayout() {
     const [arrayData, setArrayData] = useState<IDadosFormulario[]>([valoresPrevios()]);
 
+    const dispatch = useDispatch();
+
     function submit(dados: IDadosFormulario): void {
-        setArrayData([...arrayData, dados]);
+        dispatch(salvar(dados));
     }
 
     return (
@@ -45,11 +51,12 @@ function CadastroProjetosLayout() {
                     <FormProjeto onSubmit={submit} />
                 </Grid>
             </Grid> */}
-            <Projeto {...valoresPrevios()} >
+            <ListaProjeto dados={[...arrayData, ...arrayData]}>
                 <ListaProjeto dados={[...arrayData, ...arrayData]} />
-            </Projeto>
+            </ListaProjeto>
 
-            <SwipeableTemporaryDrawer />
+            <FormProjeto onSubmit={submit} />
+            
         </div>
 
     );

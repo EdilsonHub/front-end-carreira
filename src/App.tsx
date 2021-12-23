@@ -6,9 +6,12 @@ import { LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { ptBR } from 'date-fns/locale';
 
+import { Counter } from './components/Counter';
+
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
+      <Counter />
       <Box>
         <CadastroProjetosLayout />
       </Box>

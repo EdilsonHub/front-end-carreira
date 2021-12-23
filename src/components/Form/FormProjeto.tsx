@@ -7,11 +7,11 @@ import BoxFormulario from './BoxFormulario';
 import { Button, Grid } from '@mui/material';
 import * as yup from 'yup';
 import DateTimePicker from './Inputs/DateTimePicker';
-import { isDate } from 'date-fns';
 
 
 export interface IDadosFormulario {
-    id: string;
+    idProjetoSuperior?: string;
+    id?: string;
     nome: string;
     custoPrevisto: string;
     descricao: string;
@@ -70,7 +70,6 @@ const FormProjeto: React.FC<IProps> = ({ onSubmit }) => {
     return (
         <BoxFormulario titulo="Cadastro de Projetos">
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={{ nome: '' }} ref={formRef} >
-                <TextField id="id" name="id" label="ID oculto" placeholder="ID oculto da aldeia da folha" maxRows={4} multiline={true} />
                 <TextField id="nome" name="nome" label="Nome do projeto" placeholder="Digite o nome do projeto" maxRows={4} multiline={true} />
                 <TextField id="descricao" name="descricao" label="Descrição" placeholder="Digite aqui os detalhes do projeto" rows={4} multiline={true} />
                 <Scope path='tempoPrevisto'>

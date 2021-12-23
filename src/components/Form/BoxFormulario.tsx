@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
+import SwipeableDrawerRight from "../SwipeableDrawerRight";
 
 interface IPropsBoxFormulario {
     titulo?: string;
@@ -8,22 +9,25 @@ interface IPropsBoxFormulario {
 
 const BoxFormulario: React.FC<IPropsBoxFormulario> = ({ titulo, children }) => {
 
-    return (<Paper sx={{ padding: '20px 20px 5px 5px' }} elevation={0} >
-        <Typography variant="h4" component="h4" paddingLeft={1} align="center" >{titulo}</Typography>
-        <Box
-            component="div"
-            sx={{
-                '& .MuiTextField-root': { m: 1 }
-            }}
-            // noValidate
-            // autoComplete="off"
-            // onSubmit={handleSubmit}
-        >
+    return (
+        <SwipeableDrawerRight>
+            <Paper sx={{ padding: '20px 20px 5px 5px' }} elevation={0} >
+                <Typography variant="h4" component="h4" paddingLeft={1} align="center" >{titulo}</Typography>
+                <Box
+                    component="div"
+                    sx={{
+                        '& .MuiTextField-root': { m: 1 }
+                    }}
+                // noValidate
+                // autoComplete="off"
+                // onSubmit={handleSubmit}
+                >
 
-            {children}
+                    {children}
 
-        </Box>
-    </Paper>
+                </Box>
+            </Paper>
+        </SwipeableDrawerRight>
     )
 };
 

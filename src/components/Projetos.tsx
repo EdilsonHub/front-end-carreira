@@ -1,16 +1,20 @@
-import React, { Children, useState } from 'react';
+import React, { Children, useState, useEffect, useCallback } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Button, ButtonGroup, Card, CardActionArea, CardContent, CardHeader, Collapse, Divider, Grid, Icon, IconButton, Typography } from '@mui/material';
 
-import { IDadosFormulario, IDadosFormulario as IDadosFormulations } from './Form/FormProjeto';
+import { IDadosFormulario } from './Form/FormProjeto';
 
 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useDispatch } from 'react-redux';
+
+
+import { openNovo } from '../store/FormProjeto.store';
 
 interface IProps {
-    dados: IDadosFormulations[];
+    dados: IDadosFormulario[];
 }
 
 interface IPropsItemLista {
@@ -79,6 +83,13 @@ export const Projeto: React.FC<IPropsItemLista> = ({ children, nome, descricao, 
     const agendaString = montarStringAgenda(agenda);
     const labelBtnAgenda = agendaString ? 'Editar Agenda' : 'Agendar'
 
+    const [listaProjetosFilhos, setListaProjetosFilhos] = useState<IDadosFormulario[]>([]);
+
+    useEffect(
+        () => console.log('OLA EU SOU EU'), 
+        [detalhado]
+        ); // o certo seria toda vez que o valor se torne true e não toda vez que o valor mude
+
     return (
         <Accordion disableGutters expanded={detalhado} key={key} onChange={() => setDetalhado(prev => !prev)}>
 
@@ -107,18 +118,14 @@ export const Projeto: React.FC<IPropsItemLista> = ({ children, nome, descricao, 
                     </Grid>
                 </Grid>
 
-
                 {children && <Box component="div" sx={{ mb: 3, boxShadow: '0 0 10px #ccc' }} >
                     {children}
                 </Box>}
 
-
-
-                <ButtonGroup variant="contained" size="small"  color="inherit" fullWidth aria-label="outlined primary button group">
+                <ButtonGroup variant="contained" size="small" color="inherit" fullWidth aria-label="outlined primary button group">
                     <Button color="error" disabled={!!agendaString} >Remover Projeto</Button>
                     <Button color="secondary" >{labelBtnAgenda}</Button>
                     <Button color="secondary" >Editar Projeto</Button>
-                    <Button color="primary">Adicionar Novo</Button>
                 </ButtonGroup>
 
             </AccordionDetails >
@@ -129,17 +136,18 @@ export const Projeto: React.FC<IPropsItemLista> = ({ children, nome, descricao, 
 
 
 
-const ListaProjeto: React.FC<IProps> = ({ dados }) => {
+export const ListaProjeto: React.FC<IProps> = ({ dados }) => {
+
+    const dispatch = useCallback(useDispatch(), []);
 
     return (
         <div>
             {
-                dados.map((props: IDadosFormulations, index: number, array: IDadosFormulations[]) => (
+                dados.map((props: IDadosFormulario, index: number) => (
                     <Projeto key={index.toString()} {...props} />
                 ))
             }
+            <Button sx={{ marginTop: 2 }} fullWidth variant="contained" size="small" color="primary" onClick={() => dispatch(openNovo('5'))}>Adicionar Novo</Button>
         </div>
     );
 }
-
-export default ListaProjeto;
