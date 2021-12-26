@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { AppDispatch, AppThunk, RootState } from '../store'
+import { AppDispatch, AppThunk, RootState } from '../store'
 
 const stock = createSlice({
     name: 'stock',
@@ -19,6 +19,9 @@ const stock = createSlice({
 function sleep (ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+
+
 
 export const incrementAsync = (amount: number): AppThunk =>  async (dispatch: AppDispatch) => {
     await sleep(amount * 100);

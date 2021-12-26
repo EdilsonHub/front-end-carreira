@@ -10,8 +10,8 @@ import DateTimePicker from './Inputs/DateTimePicker';
 
 
 export interface IDadosFormulario {
-    idProjetoSuperior?: string;
-    id?: string;
+    idProjetoSuperior: string;
+    id: string;
     nome: string;
     custoPrevisto: string;
     descricao: string;

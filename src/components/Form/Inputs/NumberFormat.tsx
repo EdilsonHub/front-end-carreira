@@ -14,7 +14,7 @@ interface IProps {
 const NumberFormat: React.FC<IProps> = ({ id, name, label, placeholder, fullWidth }) => {
 
     const inputRef = useRef(null)
-    const { fieldName, defaultValue, registerField, error } = useField(name)
+    const { fieldName, registerField } = useField(name)
     
     useEffect(() => {
         registerField({
