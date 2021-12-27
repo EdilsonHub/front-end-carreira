@@ -11,7 +11,14 @@ import MenuProjeto from './MenuProjeto';
 import { useSelector } from 'react-redux';
 import { selectProjetos } from '../../store/Projetos.store';
 
-const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda }) => {
+interface IProps {
+    dadosFormulario: IDadosFormulario
+    idProjetoAberto: string | null;
+    setIdProjetoAberto: Function;
+}
+
+const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProjetoAberto }) => {
+    const { id, idProjetoSuperior, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda } = dadosFormulario;
 
     const [detalhado, setDetalhado] = useState<boolean>(false);
     const [listaProjetosFilhos, setListaProjetosFilhos] = useState<IDadosFormulario[]>([]);
@@ -25,20 +32,23 @@ const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, desc
         adicionar: "Adicionar subprojeto",
         editar: "Editar",
         deletar: "Deletar",
-        agendar: labelBtnAgenda 
+        agendar: labelBtnAgenda
     }
 
+    const handleOnchange = () => {
+        setIdProjetoAberto((prev: string) => (prev === id)? null : id);
+    }
     useMemo(
         () => {
-            if (detalhado) {
+            if (id === idProjetoAberto) {
                 setListaProjetosFilhos(dados.filter(n => (n.idProjetoSuperior && n.idProjetoSuperior === id)));
             }
         },
-        [dados, detalhado, id]
+        [idProjetoAberto]
     );
 
     return (
-        <Accordion TransitionProps={{ unmountOnExit: true }} disableGutters expanded={detalhado} key={id} onChange={() => setDetalhado(prev => !prev)}>
+        <Accordion TransitionProps={{ unmountOnExit: true }} disableGutters expanded={(id === idProjetoAberto)} key={id} onChange={handleOnchange}>
 
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -50,15 +60,15 @@ const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, desc
                         <Typography >{nome}</Typography>
                     </Grid>
                     <Grid item>
-                        {!!dataLimite && <Typography sx={{ color: 'text.secondary',  alignSelf: 'center' }}>{dataLimite}</Typography>}
+                        {!!dataLimite && <Typography sx={{ color: 'text.secondary', alignSelf: 'center' }}>{dataLimite}</Typography>}
                     </Grid>
                 </Grid>
             </AccordionSummary>
 
             <Divider />
 
-            <AccordionDetails sx={{backgroundColor: 'rgb(240 237 248)', color: '#FFF'}}>
-                
+            <AccordionDetails sx={{ backgroundColor: 'rgb(240 237 248)', color: '#FFF' }}>
+
                 <Grid container justifyContent="space-between">
                     <Grid item>{!!descricao && <Detalhes value={descricao} label="Descrição: " />}</Grid>
                     <Grid item style={{ margin: 'auto 0 auto auto' }}>

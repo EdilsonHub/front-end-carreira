@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { IDadosFormulario } from '../Form/FormProjeto';
 import Projeto from './Projeto';
 
@@ -11,13 +11,13 @@ interface IProps {
 
 const ListaProjeto: React.FC<IProps> = ({ dados, idProjetoSuperior, labelBtnAddProjeto }) => {
 
-
+    const [idProjetoAberto, setIdProjetoAberto] = useState<string | null>(null);
 
     return (
         <div>
             {
                 dados.map((props: IDadosFormulario, index: number) => (
-                    <Projeto key={props.id} {...props} />
+                    <Projeto dadosFormulario={props} idProjetoAberto={idProjetoAberto} setIdProjetoAberto={setIdProjetoAberto} key={props.id} />
                 ))
             }
             {/* <Button fullWidth variant="text" size="small" color="primary" onClick={() => dispatch(openNovo(idProjetoSuperior))}><AddIcon />{labelBtnAddProjeto}</Button>s */}
