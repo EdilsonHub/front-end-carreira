@@ -18,9 +18,8 @@ interface IProps {
 }
 
 const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProjetoAberto }) => {
-    const { id, idProjetoSuperior, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda } = dadosFormulario;
+    const { id, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda } = dadosFormulario;
 
-    const [detalhado, setDetalhado] = useState<boolean>(false);
     const [listaProjetosFilhos, setListaProjetosFilhos] = useState<IDadosFormulario[]>([]);
 
     const { dados } = useSelector(selectProjetos);
@@ -44,7 +43,7 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
                 setListaProjetosFilhos(dados.filter(n => (n.idProjetoSuperior && n.idProjetoSuperior === id)));
             }
         },
-        [idProjetoAberto]
+        [idProjetoAberto, dados, id]
     );
 
     return (

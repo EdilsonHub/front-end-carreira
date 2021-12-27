@@ -18,12 +18,21 @@ const projetosSlice = createSlice({
     name: 'projetos',
     initialState: initialState,
     reducers: {
-        addProjeto(state, action: PayloadAction<IDadosFormulario>) {
+        addProjeto (state, action: PayloadAction<IDadosFormulario>) {
             state.dados.push(action.payload);
+        },
+        atualizarProjeto(state, action: PayloadAction<IDadosFormulario>) {
+            state.dados.forEach(projeto => {
+                if(projeto.id === action.payload.id) {
+                    const index = state.dados.indexOf(projeto);
+                    console.log({actionIdProjetoId: action.payload.id, index});
+                    state.dados[index] = action.payload;
+                }
+            });
         }
     }
 })
 
-export const { addProjeto } = projetosSlice.actions;
+export const { addProjeto, atualizarProjeto } = projetosSlice.actions;
 export const selectProjetos = (state: RootState) => state.projetos;
 export default projetosSlice.reducer;

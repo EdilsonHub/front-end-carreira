@@ -3,18 +3,18 @@ const getProjetosTeste = () => ([
         idProjetoSuperior: '',
         id: '1',
         nome: 'ENGLISH',
-        custoPrevisto: '',
+        custoPrevisto: 'R$ 100,02',
         descricao: 'Aprimorar minhas habilidades com a lingua inglesa',
-        dataLimite: '20/01/2022 08:55',
+        dataLimite: '12/01/2022 08:55',
         agenda: {
-            inicio: '',
-            fim: '',
+            inicio: '11/01/2022 08:55',
+            fim: '13/01/2022 08:55',
         },
         tempoPrevisto: {
             meses: '12',
-            dias: '',
-            horas: '',
-            minutos: ''
+            dias: '6',
+            horas: '2',
+            minutos: '25'
         }
     },     
     {

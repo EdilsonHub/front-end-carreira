@@ -10,7 +10,7 @@ import DateTimePicker from './Inputs/DateTimePicker';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectData, setVisibilidade } from '../../store/FormProjeto.store';
-import { addProjeto } from '../../store/Projetos.store';
+import { selectProjetos, addProjeto, atualizarProjeto } from '../../store/Projetos.store';
 
 
 
@@ -52,13 +52,28 @@ const validationSchema = () => {
 const FormProjeto: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
-    const { dados: { idProjetoSuperior } } = useSelector(selectData);
+    const { dados: { idProjetoSuperior, id } } = useSelector(selectData);
+    const projetos = useSelector(selectProjetos);
     const dispatch = useDispatch();
+    // const [initialData, setInitialData ] = useState<IDadosFormulario>();
 
     const salvarProjeto = (dados: IDadosFormulario) => {
         const idFalso =  (new Date()).getTime().toString();
         dispatch(addProjeto({ ...dados, idProjetoSuperior, id: idFalso }));
         dispatch(setVisibilidade(false));
+        return idFalso;
+    }
+
+    const editarProjeto = (dados: IDadosFormulario) => {
+        dispatch(atualizarProjeto({ ...dados, idProjetoSuperior, id }));
+        dispatch(setVisibilidade(false));
+    }
+
+    const salvar = (dados: IDadosFormulario) => {
+        if(!id) {
+            return salvarProjeto(dados);
+        }
+        return editarProjeto(dados);
     }
 
     const handleSubmit: SubmitHandler<IDadosFormulario> = async (data, { reset }) => {
@@ -66,7 +81,7 @@ const FormProjeto: React.FC = () => {
             const schema = validationSchema();
             await schema.validate(data, { abortEarly: false });
             formRef?.current?.setErrors({});
-            salvarProjeto(data);
+            salvar(data);
             reset();
         } catch (error) {
             if (error instanceof yup.ValidationError) {
@@ -78,9 +93,35 @@ const FormProjeto: React.FC = () => {
         }
     };
 
+    const getInitialData = () => {
+        const projetoArray = projetos.dados.filter(n => n.id === id);
+        if(projetoArray.length === 0) {
+            return {}
+        }
+        const projeto = projetoArray[0];
+        
+        const inverterDiaMes = (dataHora: string) => {
+            if(!dataHora.trim()) return "";
+            const [data, hora] = dataHora.split(' ');
+            const [dia, mes, ano] = data.split('/');
+            return `${mes}/${dia}/${ano} ${hora}`;
+        }
+        
+        return { 
+            ...projeto, 
+            agenda: {
+                inicio: inverterDiaMes(projeto.agenda.inicio),
+                fim: inverterDiaMes(projeto.agenda.fim)
+            }, 
+            dataLimite: inverterDiaMes(projeto.dataLimite)
+        };
+    }
+
+    console.log('FormProjeto foi chamado');
+
     return (
         <BoxFormulario titulo="Cadastro de Projetos">
-            <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={{ nome: '' }} ref={formRef} >
+            <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={getInitialData()} ref={formRef} >
                 <TextField id="nome" name="nome" label="Nome do projeto" placeholder="Digite o nome do projeto" maxRows={4} multiline={true} />
                 <TextField id="descricao" name="descricao" label="Descrição" placeholder="Digite aqui os detalhes do projeto" rows={4} multiline={true} />
                 <Scope path='tempoPrevisto'>

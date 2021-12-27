@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 
 import LightTooltip from './LightTooltip'
 
-import { setIdProjetoSuperior, setVisibilidade } from '../../store/FormProjeto.store';
+import { setIdProjetoSuperior, setVisibilidade, setIdProjeto } from '../../store/FormProjeto.store';
 
 interface ITooltips {
     adicionar: string;
@@ -27,20 +27,27 @@ const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips }) => {
     const dispatch = useDispatch();
     const { adicionar, editar, deletar, agendar } = tooltips;
 
-    const handleOnclick = () => {
+    const handleOnclickAdd = () => {
+        dispatch(setIdProjeto(''));
         dispatch(setIdProjetoSuperior(idProjeto));
+        dispatch(setVisibilidade(true));
+    }
+
+    const handleOnclikEdit = () => {
+        dispatch(setIdProjetoSuperior(''));
+        dispatch(setIdProjeto(idProjeto));
         dispatch(setVisibilidade(true));
     }
 
     return (
         <>
             <LightTooltip title={adicionar} placement="top-start">
-                <IconButton onClick={handleOnclick}>
+                <IconButton onClick={handleOnclickAdd}>
                     <AddIcon color="primary" />
                 </IconButton>
             </LightTooltip>
             <LightTooltip title={editar} placement="top-start">
-                <IconButton>
+                <IconButton onClick={handleOnclikEdit}>
                     <EditIcon color="primary" />
                 </IconButton>
             </LightTooltip>

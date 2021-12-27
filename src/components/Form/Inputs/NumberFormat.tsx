@@ -14,7 +14,7 @@ interface IProps {
 const NumberFormat: React.FC<IProps> = ({ id, name, label, placeholder, fullWidth }) => {
 
     const inputRef = useRef(null)
-    const { fieldName, registerField } = useField(name)
+    const { fieldName, registerField, defaultValue } = useField(name)
     
     useEffect(() => {
         registerField({
@@ -46,7 +46,7 @@ const NumberFormat: React.FC<IProps> = ({ id, name, label, placeholder, fullWidt
         allowNegative={false}
         // allowedDecimal=","
         decimalScale={2}
-        // defaultValue={}
+        defaultValue={defaultValue}
         prefix={'R$ '}
         customInput={props => <TextField {...props} size="small" />}
 

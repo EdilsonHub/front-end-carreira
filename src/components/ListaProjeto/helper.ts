@@ -2,10 +2,17 @@ const montarStringTempoPrevito = ({ meses, dias, horas, minutos }: { meses: stri
     const formulaStringPlural = (labelSingular: string, labelPlural: string, value: string) => {
         return (Number(value) > 1) ? `${value} ${labelPlural}` : `${value} ${labelSingular}`;
     };
-    const mes = meses ? formulaStringPlural("mes", "meses", meses) : "";
-    const dia = dias ? formulaStringPlural("dia", "dias", dias) : "";
-    const hora = horas ? formulaStringPlural("hora", "horas", horas) : "";
-    const minuto = minutos ? formulaStringPlural("minuto", "minutos", minutos) : "";
+
+    const isVoid = (data: string) => {
+        if(!data.trim()) return false;
+        if(isNaN(Number(data))) return false;
+        return (Number(data) > 0);
+    }
+
+    const mes = isVoid(meses)? formulaStringPlural("mes", "meses", meses) : "";
+    const dia = isVoid(dias)? formulaStringPlural("dia", "dias", dias) : "";
+    const hora = isVoid(horas)? formulaStringPlural("hora", "horas", horas) : "";
+    const minuto = isVoid(minutos)? formulaStringPlural("minuto", "minutos", minutos) : "";
 
     let arrayFiltrado = [mes, dia, hora, minuto].filter(n => !!n);
 
