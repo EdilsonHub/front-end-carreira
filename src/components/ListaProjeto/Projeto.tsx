@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, memo } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Divider, Grid, Typography, Box } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -83,5 +83,5 @@ const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, desc
     );
 }
 
-export default Projeto;
+export default memo(Projeto);
 

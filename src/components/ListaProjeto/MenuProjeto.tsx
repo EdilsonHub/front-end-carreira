@@ -30,7 +30,6 @@ const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips }) => {
     const handleOnclick = () => {
         dispatch(setIdProjetoSuperior(idProjeto));
         dispatch(setVisibilidade(true));
-
     }
 
     return (

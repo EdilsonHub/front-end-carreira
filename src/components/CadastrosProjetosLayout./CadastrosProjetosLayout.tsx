@@ -12,7 +12,9 @@ function CadastroProjetosLayout() {
     const { dados } = useSelector(selectProjetos);
 
     useEffect( 
-        () => setArrayData(dados.filter(n => !n.idProjetoSuperior)),
+        () => {
+            setArrayData(dados.filter(n => !n.idProjetoSuperior));
+        },
         [dados]
     );
 

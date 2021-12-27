@@ -52,7 +52,7 @@ const validationSchema = () => {
 const FormProjeto: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
-    const { dados: {idProjetoSuperior, id} } = useSelector(selectData);
+    const { dados: { idProjetoSuperior } } = useSelector(selectData);
     const dispatch = useDispatch();
 
     const salvarProjeto = (dados: IDadosFormulario) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { IDadosFormulario } from '../Form/FormProjeto';
 import Projeto from './Projeto';
 
@@ -17,7 +17,7 @@ const ListaProjeto: React.FC<IProps> = ({ dados, idProjetoSuperior, labelBtnAddP
         <div>
             {
                 dados.map((props: IDadosFormulario, index: number) => (
-                    <Projeto key={index.toString()} {...props} />
+                    <Projeto key={props.id} {...props} />
                 ))
             }
             {/* <Button fullWidth variant="text" size="small" color="primary" onClick={() => dispatch(openNovo(idProjetoSuperior))}><AddIcon />{labelBtnAddProjeto}</Button>s */}
@@ -25,4 +25,4 @@ const ListaProjeto: React.FC<IProps> = ({ dados, idProjetoSuperior, labelBtnAddP
     );
 }
 
-export default ListaProjeto;
+export default memo(ListaProjeto);
