@@ -56,7 +56,8 @@ const FormProjeto: React.FC = () => {
     const dispatch = useDispatch();
 
     const salvarProjeto = (dados: IDadosFormulario) => {
-        dispatch(addProjeto({ ...dados,idProjetoSuperior, id }));
+        const idFalso =  (new Date()).getTime().toString();
+        dispatch(addProjeto({ ...dados, idProjetoSuperior, id: idFalso }));
         dispatch(setVisibilidade(false));
     }
 

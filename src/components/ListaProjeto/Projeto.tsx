@@ -31,7 +31,7 @@ const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, desc
     useMemo(
         () => {
             if (detalhado) {
-                setListaProjetosFilhos(dados.filter(n => n.idProjetoSuperior === id));
+                setListaProjetosFilhos(dados.filter(n => (n.idProjetoSuperior && n.idProjetoSuperior === id)));
             }
         },
         [dados, detalhado, id]
