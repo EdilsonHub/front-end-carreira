@@ -3,26 +3,19 @@ import React, { useEffect, useState } from "react";
 import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
 import ListaProjeto  from "../ListaProjeto";
 
-
-import { useDispatch, useSelector } from 'react-redux';
-
-
-import { salvar, selectData } from '../../store/FormProjeto.store';
+import { useSelector } from 'react-redux';
+import { selectProjetos } from '../../store/Projetos.store';
 
 function CadastroProjetosLayout() {
     const [arrayData, setArrayData] = useState<IDadosFormulario[]>([]);
 
-    const dispatch = useDispatch();
-    const controlsForm = useSelector(selectData);
+    const { dados } = useSelector(selectProjetos);
 
-    useEffect(
-        () => setArrayData(controlsForm.projetos.filter(n => !n.idProjetoSuperior)),
-        [controlsForm]
+    useEffect( 
+        () => setArrayData(dados.filter(n => !n.idProjetoSuperior)),
+        [dados]
     );
 
-    function submit(dados: IDadosFormulario): void {
-        dispatch(salvar(dados));
-    }
 
     return (
         <div style={{ backgroundColor: '#ddd' }}>
@@ -34,7 +27,7 @@ function CadastroProjetosLayout() {
             />
 
 
-            <FormProjeto onSubmit={submit} />
+            <FormProjeto />
 
         </div>
 

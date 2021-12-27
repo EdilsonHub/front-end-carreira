@@ -8,6 +8,11 @@ import { Button, Grid } from '@mui/material';
 import * as yup from 'yup';
 import DateTimePicker from './Inputs/DateTimePicker';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { selectData, setVisibilidade } from '../../store/FormProjeto.store';
+import { addProjeto } from '../../store/Projetos.store';
+
+
 
 export interface IDadosFormulario {
     idProjetoSuperior: string;
@@ -43,19 +48,24 @@ const validationSchema = () => {
     })
 }
 
-interface IProps {
-    onSubmit: (params: IDadosFormulario) => void;
-}
 
-const FormProjeto: React.FC<IProps> = ({ onSubmit }) => {
+const FormProjeto: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
+
+    const { dados: {idProjetoSuperior, id} } = useSelector(selectData);
+    const dispatch = useDispatch();
+
+    const salvarProjeto = (dados: IDadosFormulario) => {
+        dispatch(addProjeto({ ...dados,idProjetoSuperior, id }));
+        dispatch(setVisibilidade(false));
+    }
 
     const handleSubmit: SubmitHandler<IDadosFormulario> = async (data, { reset }) => {
         try {
             const schema = validationSchema();
             await schema.validate(data, { abortEarly: false });
             formRef?.current?.setErrors({});
-            onSubmit(data);
+            salvarProjeto(data);
             reset();
         } catch (error) {
             if (error instanceof yup.ValidationError) {

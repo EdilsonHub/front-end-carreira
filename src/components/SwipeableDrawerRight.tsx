@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectData, showFormulario } from '../store/FormProjeto.store';
+import { selectData, setVisibilidade } from '../store/FormProjeto.store';
 
 
 const SwipeableDrawerRight: React.FC = ({ children }) => {
@@ -17,8 +17,8 @@ const SwipeableDrawerRight: React.FC = ({ children }) => {
             <SwipeableDrawer
                 anchor="right"
                 open={controlsForm.visibilidade}
-                onClose={() => dispatch(showFormulario(false))}
-                onOpen={() => dispatch(showFormulario(true))}
+                onClose={() => dispatch(setVisibilidade(false))}
+                onOpen={() => dispatch(setVisibilidade(true))}
             >
                 <Box
                     sx={{ maxWidth: 500 }}

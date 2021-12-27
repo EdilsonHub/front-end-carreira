@@ -3,12 +3,14 @@ import { useDispatch } from 'react-redux';
 import stockReducer from './Stock.store';
 import swipeableDrawer from './SwipeableDrawer.store';
 import formProjeto from './FormProjeto.store';
+import projetosSlice from './Projetos.store'
 
 export const store = configureStore({
     reducer: {
         stock: stockReducer,
         swipeableDrawer: swipeableDrawer,
-        formProjeto: formProjeto
+        formProjeto: formProjeto,
+        projetos: projetosSlice
     }
 })
 

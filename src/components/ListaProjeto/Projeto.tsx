@@ -9,16 +9,14 @@ import { montarStringAgenda, montarStringTempoPrevito } from './helper';
 import MenuProjeto from './MenuProjeto';
 
 import { useSelector } from 'react-redux';
-import { selectData } from '../../store/FormProjeto.store';
+import { selectProjetos } from '../../store/Projetos.store';
 
 const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda }) => {
-
-    // const dispatch = useDispatch();
 
     const [detalhado, setDetalhado] = useState<boolean>(false);
     const [listaProjetosFilhos, setListaProjetosFilhos] = useState<IDadosFormulario[]>([]);
 
-    const controlsForm = useSelector(selectData);
+    const { dados } = useSelector(selectProjetos);
 
     const tempoPrevistoString = montarStringTempoPrevito(tempoPrevisto);
     const agendaString = montarStringAgenda(agenda);
@@ -33,52 +31,41 @@ const Projeto: React.FC<IDadosFormulario> = ({ id, idProjetoSuperior, nome, desc
     useMemo(
         () => {
             if (detalhado) {
-                // console.log('OLA EU SOU useMemo');
-                setListaProjetosFilhos(controlsForm.projetos.filter(n => n.idProjetoSuperior === id));
+                setListaProjetosFilhos(dados.filter(n => n.idProjetoSuperior === id));
             }
         },
-        [controlsForm.projetos, detalhado, id]
+        [dados, detalhado, id]
     );
 
-    const handleChangeAcordion = () => {
-
-            const valueDetalhado = detalhado;
-            if (!valueDetalhado) {
-                setDetalhado(true);
-                setListaProjetosFilhos(controlsForm.projetos.filter(n => n.idProjetoSuperior === id));
-            } else {
-                setDetalhado(false);
-            }
-        };
-
-    // console.log({ id });
-
     return (
-        <Accordion TransitionProps={{ unmountOnExit: true }} disableGutters expanded={detalhado} key={id} onChange={handleChangeAcordion}>
+        <Accordion TransitionProps={{ unmountOnExit: true }} disableGutters expanded={detalhado} key={id} onChange={() => setDetalhado(prev => !prev)}>
 
             <AccordionSummary
-                // sx={{backgroundColor: '#ccc', color: '#FFF'}}
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel2bh-content"
                 id={"panel2bh-header-" + id}
             >
                 <Grid container justifyContent="space-between">
                     <Grid item>
-                        <Typography /*sx={cssTitulo}*/  >{nome}</Typography>
+                        <Typography >{nome}</Typography>
                     </Grid>
                     <Grid item>
-                        {!!dataLimite && <Typography sx={{ color: 'text.secondary', /*textAlign: 'end',*/ alignSelf: 'center' }}>{dataLimite}</Typography>}
+                        {!!dataLimite && <Typography sx={{ color: 'text.secondary',  alignSelf: 'center' }}>{dataLimite}</Typography>}
                     </Grid>
                 </Grid>
             </AccordionSummary>
+
             <Divider />
+
             <AccordionDetails sx={{backgroundColor: 'rgb(240 237 248)', color: '#FFF'}}>
+                
                 <Grid container justifyContent="space-between">
                     <Grid item>{!!descricao && <Detalhes value={descricao} label="Descrição: " />}</Grid>
                     <Grid item style={{ margin: 'auto 0 auto auto' }}>
                         <MenuProjeto tooltips={tooltipsLabel} idProjeto={id} />
                     </Grid>
                 </Grid>
+
                 <Grid container justifyContent="space-between">
 
                     {!!custoPrevisto && <Grid item ><Detalhes value={custoPrevisto} label="Custos Previsto: " />  </Grid>}
