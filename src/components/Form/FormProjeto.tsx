@@ -52,7 +52,7 @@ const validationSchema = () => {
 const FormProjeto: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
 
-    const { dados: { idProjetoSuperior, id } } = useSelector(selectData);
+    const { nomeFormulario, dados: { idProjetoSuperior, id } } = useSelector(selectData);
     const projetos = useSelector(selectProjetos);
     const dispatch = useDispatch();
     // const [initialData, setInitialData ] = useState<IDadosFormulario>();
@@ -120,7 +120,7 @@ const FormProjeto: React.FC = () => {
     console.log('FormProjeto foi chamado');
 
     return (
-        <BoxFormulario titulo="Cadastro de Projetos">
+        <BoxFormulario titulo={nomeFormulario}>
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={getInitialData()} ref={formRef} >
                 <TextField id="nome" name="nome" label="Nome do projeto" placeholder="Digite o nome do projeto" maxRows={4} multiline={true} />
                 <TextField id="descricao" name="descricao" label="Descrição" placeholder="Digite aqui os detalhes do projeto" rows={4} multiline={true} />

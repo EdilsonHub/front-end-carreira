@@ -3,11 +3,13 @@ import type { RootState } from '../store'
 import { IDadosFormulario } from "../components/Form/FormProjeto";
 
 interface IState {
+    nomeFormulario: string;
     visibilidade: boolean;
     dados: IDadosFormulario;
 }
 
 const initialState: IState = {
+    nomeFormulario: '',
     visibilidade: false,
     dados: {
         idProjetoSuperior: '',
@@ -44,10 +46,13 @@ const formProjeto = createSlice({
         },
         setFormulario(state, action: PayloadAction<IDadosFormulario>) {
             state.dados = action.payload;
+        },
+        setNomeFormulario(state, action: PayloadAction<string>) {
+            state.nomeFormulario = action.payload;
         }
     }
 })
 
-export const { setIdProjeto, setIdProjetoSuperior, setVisibilidade, setFormulario } = formProjeto.actions;
+export const { setIdProjeto, setIdProjetoSuperior, setVisibilidade, setFormulario, setNomeFormulario } = formProjeto.actions;
 export const selectData = (state: RootState) => state.formProjeto;
 export default formProjeto.reducer;

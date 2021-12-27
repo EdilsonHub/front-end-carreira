@@ -11,7 +11,6 @@ import { Counter } from './components/Counter';
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
-      <Counter />
       <Box>
         <CadastroProjetosLayout />
       </Box>

@@ -9,7 +9,9 @@ import { useDispatch } from 'react-redux';
 
 import LightTooltip from './LightTooltip'
 
-import { setIdProjetoSuperior, setVisibilidade, setIdProjeto } from '../../store/FormProjeto.store';
+import { setIdProjetoSuperior, setVisibilidade, setIdProjeto, setNomeFormulario } from '../../store/FormProjeto.store';
+import { removeProjeto } from '../../store/Projetos.store';
+
 
 interface ITooltips {
     adicionar: string;
@@ -20,24 +22,32 @@ interface ITooltips {
 
 interface IProps {
     idProjeto: string;
+    nomeProjeto: string
     tooltips: ITooltips;
 }
 
-const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips }) => {
+const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto }) => {
     const dispatch = useDispatch();
     const { adicionar, editar, deletar, agendar } = tooltips;
 
     const handleOnclickAdd = () => {
         dispatch(setIdProjeto(''));
         dispatch(setIdProjetoSuperior(idProjeto));
+        dispatch(setNomeFormulario(`Cadastrar subprojeto: ${nomeProjeto}`));
         dispatch(setVisibilidade(true));
+
     }
 
     const handleOnclikEdit = () => {
         dispatch(setIdProjetoSuperior(''));
         dispatch(setIdProjeto(idProjeto));
+        dispatch(setNomeFormulario(`Editar: ${nomeProjeto}`));
         dispatch(setVisibilidade(true));
     }
+
+    const handleOnclickRemove = () => {
+        dispatch(removeProjeto(idProjeto));
+    } 
 
     return (
         <>
@@ -51,14 +61,13 @@ const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips }) => {
                     <EditIcon color="primary" />
                 </IconButton>
             </LightTooltip>
-            <LightTooltip title={agendar} placement="top-start">
+            {/* <LightTooltip title={agendar} placement="top-start">
                 <IconButton>
                     <AccessTimeIcon color="secondary" />
                 </IconButton>
-            </LightTooltip>
-
+            </LightTooltip> */}
             <LightTooltip title={deletar} placement="top-start">
-                <IconButton>
+                <IconButton onClick={handleOnclickRemove}>
                     <DeleteIcon color="error" />
                 </IconButton>
             </LightTooltip>

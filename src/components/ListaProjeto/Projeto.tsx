@@ -71,7 +71,7 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
                 <Grid container justifyContent="space-between">
                     <Grid item>{!!descricao && <Detalhes value={descricao} label="Descrição: " />}</Grid>
                     <Grid item style={{ margin: 'auto 0 auto auto' }}>
-                        <MenuProjeto tooltips={tooltipsLabel} idProjeto={id} />
+                        <MenuProjeto tooltips={tooltipsLabel} idProjeto={id} nomeProjeto={nome} />
                     </Grid>
                 </Grid>
 
