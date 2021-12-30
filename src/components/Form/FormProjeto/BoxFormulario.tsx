@@ -1,6 +1,9 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
-import SwipeableDrawerRight from "../SwipeableDrawerRight";
+import SwipeableDrawerRight from "../../SwipeableDrawerRight";
+
+import { useSelector, useDispatch } from 'react-redux';
+import { selectData, setVisibilidade } from '../../../store/FormProjeto.store';
 
 interface IPropsBoxFormulario {
     titulo?: string;
@@ -9,9 +12,17 @@ interface IPropsBoxFormulario {
 
 const BoxFormulario: React.FC<IPropsBoxFormulario> = ({ titulo, children }) => {
 
+    const controlsForm = useSelector(selectData);
+    const dispatch = useDispatch()
+
     return (
-        <SwipeableDrawerRight>
-            <Paper sx={{ padding: '20px 20px 5px 5px' }} elevation={0} >
+        <SwipeableDrawerRight
+            visibilidade={controlsForm.visibilidade}
+            anchor="right"
+            onOpen={() => dispatch(setVisibilidade(true))}
+            onClose={() => dispatch(setVisibilidade(false))}
+        >
+            <Paper sx={{ p: 1, marginRight: 2 }} elevation={0} >
                 <Typography variant="h5" component="h6" paddingLeft={1} align="center" >{titulo}</Typography>
                 <Box
                     component="div"

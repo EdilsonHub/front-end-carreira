@@ -25,7 +25,7 @@ const projetosSlice = createSlice({
             state.dados.forEach(projeto => {
                 if (projeto.id === action.payload.id) {
                     const index = state.dados.indexOf(projeto);
-                    state.dados[index] = action.payload;
+                    state.dados[index] = {...action.payload, idProjetoSuperior: state.dados[index].idProjetoSuperior};
                 }
             });
         },
@@ -42,6 +42,7 @@ const projetosSlice = createSlice({
     }
 })
 
+export type  { IDadosFormulario as IProjeto };
 export const { addProjeto, atualizarProjeto, removeProjeto} = projetosSlice.actions;
 export const selectProjetos = (state: RootState) => state.projetos;
 export default projetosSlice.reducer;

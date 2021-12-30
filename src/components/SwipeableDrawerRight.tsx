@@ -1,27 +1,28 @@
-import * as React from 'react';
+import React, { SyntheticEvent } from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { selectData, setVisibilidade } from '../store/FormProjeto.store';
 
+interface IProps {
+    anchor: "top" | "left" | "right" | "bottom" | undefined;
+    visibilidade: boolean;
+    onClose: (event: SyntheticEvent<{}, Event>) => void;
+    onOpen: (event: SyntheticEvent<{}, Event>) => void;
+}
 
-const SwipeableDrawerRight: React.FC = ({ children }) => {
+const SwipeableDrawerRight: React.FC<IProps> = ({ children, anchor, visibilidade, onClose, onOpen }) => {
     // const [state, setState] = React.useState<boolean>(false);
-
-    const controlsForm = useSelector(selectData);
-    const dispatch = useDispatch()
 
     return (
         <div>
             <SwipeableDrawer
-                anchor="right"
-                open={controlsForm.visibilidade}
-                onClose={() => dispatch(setVisibilidade(false))}
-                onOpen={() => dispatch(setVisibilidade(true))}
+                anchor={anchor}
+                open={visibilidade}
+                onClose={onClose}
+                onOpen={onOpen}
             >
                 <Box
-                    sx={{ maxWidth: 500 }}
+                    sx={(anchor === "right" || anchor === "left")? { maxWidth: 500 }: {}}
                     role="presentation"
                 >
                     {children} 

@@ -1,20 +1,20 @@
 import React, { useRef } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles, Scope, SubmitHandler } from '@unform/core';
-import TextField from './Inputs/TextField';
-import NumberFormat from './Inputs/NumberFormat';
+import TextField from '../Inputs/TextField';
+import NumberFormat from '../Inputs/NumberFormat';
 import BoxFormulario from './BoxFormulario';
-import { Button, Grid } from '@mui/material';
+import { Button, ButtonGroup, Grid } from '@mui/material';
 import * as yup from 'yup';
-import DateTimePicker from './Inputs/DateTimePicker';
+import DateTimePicker from '../Inputs/DateTimePicker';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectData, setVisibilidade } from '../../store/FormProjeto.store';
-import { selectProjetos, addProjeto, atualizarProjeto } from '../../store/Projetos.store';
+import { selectData, setVisibilidade } from '../../../store/FormProjeto.store';
+import { selectProjetos, addProjeto, atualizarProjeto } from '../../../store/Projetos.store';
 
 
 
-export interface IDadosFormulario {
+export interface IDadosFormulario { //isto deveria estar no store
     idProjetoSuperior: string;
     id: string;
     nome: string;
@@ -35,7 +35,7 @@ export interface IDadosFormulario {
 
 const validationSchema = () => {
     return yup.object({
-        nome: yup.string().required('O nome do projeto está vazio'),
+        nome: yup.string().required('O nome do projeto é obrigatório'),
         // dataLimite: yup.date()
         // .transform((curr, orig, coisa ) => {console.log({curr, orig, coisa}); return curr;})
         // .required('Mandatory field message'),
@@ -58,9 +58,8 @@ const FormProjeto: React.FC = () => {
     // const [initialData, setInitialData ] = useState<IDadosFormulario>();
 
     const salvarProjeto = (dados: IDadosFormulario) => {
-        const idFalso =  (new Date()).getTime().toString();
+        const idFalso = (new Date()).getTime().toString();
         dispatch(addProjeto({ ...dados, idProjetoSuperior, id: idFalso }));
-        dispatch(setVisibilidade(false));
         return idFalso;
     }
 
@@ -70,7 +69,7 @@ const FormProjeto: React.FC = () => {
     }
 
     const salvar = (dados: IDadosFormulario) => {
-        if(!id) {
+        if (!id) {
             return salvarProjeto(dados);
         }
         return editarProjeto(dados);
@@ -94,27 +93,34 @@ const FormProjeto: React.FC = () => {
     };
 
     const getInitialData = () => {
+        if(!id) {
+            return {};
+        }
         const projetoArray = projetos.dados.filter(n => n.id === id);
-        if(projetoArray.length === 0) {
+        if (projetoArray.length === 0) {
             return {}
         }
         const projeto = projetoArray[0];
-        
+
         const inverterDiaMes = (dataHora: string) => {
-            if(!dataHora.trim()) return "";
+            if (!dataHora.trim()) return "";
             const [data, hora] = dataHora.split(' ');
             const [dia, mes, ano] = data.split('/');
             return `${mes}/${dia}/${ano} ${hora}`;
         }
-        
-        return { 
-            ...projeto, 
+
+        return {
+            ...projeto,
             agenda: {
                 inicio: inverterDiaMes(projeto.agenda.inicio),
                 fim: inverterDiaMes(projeto.agenda.fim)
-            }, 
+            },
             dataLimite: inverterDiaMes(projeto.dataLimite)
         };
+    }
+
+    const handleOnclikLeft = () => {
+        dispatch(setVisibilidade(false));
     }
 
     console.log('FormProjeto foi chamado');
@@ -152,7 +158,10 @@ const FormProjeto: React.FC = () => {
                     </Grid>
                 </Scope>
 
-                <Button sx={{ margin: 1 }} type="submit" fullWidth variant="contained" size="medium">Salvar</Button>
+                <ButtonGroup sx={{m: 1}} variant="outlined" fullWidth color="inherit" size="medium" aria-label="medium secondary button group">
+                    <Button onClick={handleOnclikLeft} color="warning" >Cancelar</Button>
+                    <Button color="primary" type="submit" >Salvar</Button>
+                </ButtonGroup>
             </Form>
         </BoxFormulario>
     );

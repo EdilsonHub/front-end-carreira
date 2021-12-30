@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import FormProjeto, { IDadosFormulario } from "../Form/FormProjeto";
-import ListaProjeto from "../ListaProjeto";
+import FormProjeto, { IDadosFormulario } from "../../components/Form/FormProjeto";
+import ListaProjeto from "../../components/ListaProjeto";
 
 import { useSelector } from 'react-redux';
 import { selectProjetos } from '../../store/Projetos.store';
-import { Button, Box } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 import { useDispatch } from 'react-redux';
 import { setIdProjetoSuperior, setVisibilidade, setIdProjeto, setNomeFormulario } from '../../store/FormProjeto.store';
@@ -33,19 +34,22 @@ function CadastroProjetosLayout() {
 
     return (
         <div>
-            <Box component="div" sx={{ p: 2, textAlign: 'right' }}>
-                <Button onClick={handleOnclickAddProjeto} >
-                    Adicionar Novo Projeto
-                </Button>
+            <Typography variant="h4" component="h2" sx={{ textTransform: 'uppercase' }} >Cadastro de projetos</Typography>
+         
+            <Box component="div" sx={{ paddingTop: 2,paddingBottom: 2, textAlign: 'right' }}>
+                <Button variant="outlined" onClick={handleOnclickAddProjeto} startIcon={<AddIcon color="primary" />} >Adicionar Novo Projeto</Button>
             </Box>
-            <ListaProjeto
-                dados={arrayData}
-                idProjetoSuperior=""
-                labelBtnAddProjeto="Adicionar Projeto"
-            />
+
+            <Box>
+                <ListaProjeto
+                    dados={arrayData}
+                    idProjetoSuperior=""
+                    labelBtnAddProjeto="Adicionar Projeto"
+                />
 
 
-            <FormProjeto />
+                <FormProjeto />
+            </Box>
 
         </div>
 

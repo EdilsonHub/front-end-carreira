@@ -3,14 +3,21 @@ import { useDispatch } from 'react-redux';
 import stockReducer from './Stock.store';
 import swipeableDrawer from './SwipeableDrawer.store';
 import formProjeto from './FormProjeto.store';
-import projetosSlice from './Projetos.store'
+import projetosSlice from './Projetos.store';
+import agendaSlice from './Agenda.store';
+import formAgendaSlice from './FormAgenda.store';
+import agendamentosSlice from './Agendamento.store';
+
 
 export const store = configureStore({
     reducer: {
         stock: stockReducer,
         swipeableDrawer: swipeableDrawer,
         formProjeto: formProjeto,
-        projetos: projetosSlice
+        projetos: projetosSlice,
+        agendas: agendaSlice,
+        formAgenda: formAgendaSlice,
+        agendamentos: agendamentosSlice 
     }
 })
 
