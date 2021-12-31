@@ -7,7 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination, { LabelDisplayedRowsArgs } from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
@@ -17,9 +17,10 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
-import { IAgendamento } from '../../store/Agendamento.store'; 
+import { IAgendamento } from '../../store/Agendamento.store';
+import { TableHead, Typography } from '@mui/material';
 
-interface TablePaginationActionsProps { 
+interface TablePaginationActionsProps {
   count: number;
   page: number;
   rowsPerPage: number;
@@ -115,23 +116,24 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ rows }) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+
         <TableBody>
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row: IAgendamento) => (
             <TableRow key={row.id}>
-              <TableCell style={{ width: 120 }}>
-                {row.inicio}
+              <TableCell style={{ width: 140 }}>
+                <Typography>{row.inicio}</Typography>
               </TableCell>
-              <TableCell style={{ width: 120 }} align="left">
-                {row.fim}
+              <TableCell style={{ width: 140 }} align="left">
+                <Typography>{row.fim}</Typography>
               </TableCell>
               <TableCell align="left">
-                {row.nomeProjeto}
+                <Typography> <Typography color="lightgray" component="span">{row.caminhoProjeto}</Typography> {row.nomeProjeto}</Typography>
               </TableCell>
               <TableCell style={{ width: 120 }} align="right">
-               AÇÕES
+                AÇÕES
               </TableCell>
             </TableRow>
           ))}
@@ -145,20 +147,23 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ rows }) => {
           <TableRow>
 
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              rowsPerPageOptions={[5, 10, 25, 50, { label: 'Todas', value: -1 }]}
               colSpan={4}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
                 inputProps: {
-                  'aria-label': 'rows per page',
+                  'aria-label': 'linhas por páginas',
                 },
                 native: true,
               }}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
+
+              labelRowsPerPage="Linhas por página"
+              labelDisplayedRows={({ from, to, count }: LabelDisplayedRowsArgs) => (`${from}–${to} de ${count !== -1 ? count : `mais ${to}`}`)}
             />
 
           </TableRow>

@@ -79,10 +79,10 @@ const FormAgenda: React.FC = () => {
                         <DateTimePicker label="Inicio Agenda" name="inicio" />
                     </Grid>
                     <Grid item xs={12} md={2}>
-                        <DateTimePicker label="Inicio Agenda" name="fim" />
+                        <DateTimePicker label="Fim Agenda" name="fim" />
                     </Grid>
                     <Grid item xs={12} md={3}>
-                        <ButtonGroup sx={{ m: 1 }} variant="outlined" fullWidth color="inherit" size="medium" aria-label="medium secondary button group">
+                        <ButtonGroup sx={{ m: 1 }} variant="outlined" fullWidth color="inherit" size="large" aria-label="medium secondary button group">
                             <Button onClick={handleOnclikLeft} color="warning" >Cancelar</Button>
                             <Button color="primary" type="submit" >Salvar</Button>
                         </ButtonGroup>

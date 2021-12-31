@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { DatePicker, TimePicker } from '@mui/lab';
 import { TextField, Box, Grid, Button, Breadcrumbs, Typography, ButtonGroup } from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAgendas, IAgenda } from '../../store/Agenda.store';
-import { selectAgendamentos, IAgendamento } from '../../store/Agendamento.store';
+import { selectAgendamentos, IAgendamento, addAgendamentos } from '../../store/Agendamento.store';
 import { selectProjetos, IProjeto } from '../../store/Projetos.store';
 
 import { setVisibilidade, setIdAgenda as setIdFormAgenda, setIdAgendaSuperior } from '../../store/FormAgenda.store';
 
 
-import BuscaProjeto from './BuscaProjeto';
+import BuscaProjetoAgendamento from './BuscaProjetoAgendamento';
 
 import CustomPaginationActionsTable from '../../components/TablePaginationActions';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import ListaProjeto from '../../components/ListaProjeto';
 
 interface IProps {
     idAgenda: string;
@@ -75,8 +77,19 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
     }, [agendas, idAgenda]);
 
     useEffect(() => {
-        setAgendamentoAtual(agendamentos.filter(n => n.idAgenda = idAgenda));
+        setAgendamentoAtual(agendamentos.filter(n => n.idAgenda === idAgenda));
     }, [agendamentos, idAgenda]);
+
+    useEffect(() => {
+        let projetosRoot = projetos.filter(p => (!p.idProjetoSuperior && agendamentos.filter(ag => ag.idProjeto === p.id).length === 0));
+        let projetosAgendamentosAgendaMae: IProjeto[] = [];
+        let agendalentosAgendaMae: IAgendamento[] = [];
+        if (agendaAtual?.idAgendaSuperior) {
+            agendalentosAgendaMae = agendamentos.filter(n => (n.idAgenda === agendaAtual.idAgendaSuperior));
+            projetosAgendamentosAgendaMae = projetos.filter(n => agendalentosAgendaMae.map(n => n.idProjeto).includes(n.id))
+        }
+        setProjetosEscolhiveis([...projetosRoot, ...projetosAgendamentosAgendaMae]);
+    }, [idAgenda]);
 
     const mudarAgenda = (idAgenda: string) => {
         setIdAgenda(idAgenda)
@@ -86,6 +99,11 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         dispatch(setVisibilidade(true));
         dispatch(setIdFormAgenda(''));
         dispatch(setIdAgendaSuperior(idAgenda));
+    }
+
+    const getHeaderTabela = () => {
+        if(!agendaAtual) return "Nenhuma agenda selecionada";
+        return `${agendaAtual.inicio || 'DATA NÃO ATRIBUÍDA'} à ${agendaAtual.fim || 'DATA NÃO ATRIBUÍDA'} `;
     }
 
 
@@ -98,7 +116,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 </Button>
                 {historicoAgendas.map(({ id, nome, inicio, fim }: IAgenda, index: number) => (
                     <Button key={id} onClick={() => mudarAgenda(id)} disabled={historicoAgendas.length === (index + 1)}>
-                        <Typography variant="h5" component="h5">{nome}</Typography>
+                        <Typography variant="h5" component="h5">{(historicoAgendas.length === (index + 1))? `${nome} (${inicio} à ${fim})` : nome }</Typography>
                     </Button>
                 ))
                 }
@@ -108,7 +126,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 <Grid container spacing={2}>
                     {agendasDisponiveis.map(({ id, nome, inicio, fim }: IAgenda) => (
                         <Grid item key={id}>
-                            <Button onClick={() => mudarAgenda(id)}  variant="outlined" >{nome}</Button>
+                            <Button onClick={() => mudarAgenda(id)} variant="outlined" >{nome}</Button>
                         </Grid>))
                     }
                     <Grid item key="id_solo">
@@ -117,12 +135,22 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 </Grid>
             </Box>
 
-            {(agendamentoAtual.length > 0) && <CustomPaginationActionsTable rows={agendamentoAtual} />}
+            {(historicoAgendas.length > 0) && <CustomPaginationActionsTable rows={agendamentoAtual} />}
+            {/* 
+            {(historicoAgendas.length > 0) && (
+                <Box component="div" sx={{ paddingTop: 2, paddingBottom: 2, textAlign: 'right' }}>
+                    <Button variant="outlined" onClick={handleOnclickAgendarProjeto} startIcon={<AddIcon color="primary" />} >Abrir busca de projeto para agendamento</Button>
+                </Box>
+            )} */}
 
-            <Box component="div" sx={{ paddingTop: 2, paddingBottom: 2, textAlign: 'right' }}>
-                <Button variant="outlined" onClick={handleOnclickAgendarProjeto} startIcon={<AddIcon color="primary" />} >Abrir busca de projeto para agendamento</Button>
-            </Box>
-            <BuscaProjeto />
+            {
+                (historicoAgendas.length > 0 && projetosEscolhiveis.length > 0) && <BuscaProjetoAgendamento
+                    projetosEscolhiveis={projetosEscolhiveis}
+                    idAgenda={idAgenda}
+                />
+            }
+
+
         </>
     );
 }
