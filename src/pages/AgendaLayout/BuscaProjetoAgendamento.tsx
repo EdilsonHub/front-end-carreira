@@ -3,6 +3,7 @@ import { IProjeto, selectProjetos } from '../../store/Projetos.store';
 import { addAgendamentos, selectAgendamentos } from '../../store/Agendamento.store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Autocomplete, TextField, Breadcrumbs, Typography, Box, Grid } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
 
 
 import { Form } from '@unform/web';
@@ -157,7 +158,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
                         <DateTimePicker label="Data Final" name="fim" />
                     </Grid>
                     <Grid item xs={12} md={3} xl={2}>
-                        <Button variant="outlined" fullWidth size='large' color="primary" type="submit" >Agendar projeto</Button>
+                        <Button variant="outlined" fullWidth size='large' color="primary" type="submit" startIcon={<EventIcon/>}>Agendar projeto</Button>
                     </Grid>
                 </Grid>
             </Form>

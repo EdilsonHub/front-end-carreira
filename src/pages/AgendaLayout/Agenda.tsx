@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Breadcrumbs, Typography } from '@mui/material';
+import { Box, Grid, Button, Breadcrumbs, Typography, ButtonGroup } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAgendas, IAgenda } from '../../store/Agenda.store';
@@ -77,7 +79,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
 
 
     useEffect(() => {
-        const agrupar = (p: IProjeto[], grupo: string) => p.map(n => ({...n, grupo })) ;
+        const agrupar = (p: IProjeto[], grupo: string) => p.map(n => ({ ...n, grupo }));
         const projetosRoot = projetos.filter(p => (
             !p.idProjetoSuperior
             && agendamentos.filter(ag => ag.idProjeto === p.id).length === 0
@@ -90,7 +92,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         }
 
         const getNomeAgendaAnterior = () => {
-            if(historicoAgendas.length < 2) return "NÃO POSSUÍ AGENDA SUPERIOR";
+            if (historicoAgendas.length < 2) return "NÃO POSSUÍ AGENDA SUPERIOR";
             const indicePenultimo = historicoAgendas.length - 2;
             return historicoAgendas[indicePenultimo].nome.toUpperCase();
         }
@@ -131,15 +133,19 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 }
             </Breadcrumbs>
 
-            <Box component="div" sx={{ paddingBottom: 2 }}>
+            <Box component="div" sx={{ paddingBottom: 2 }} >
                 <Grid container spacing={2}>
                     {agendasDisponiveis.map(({ id, nome, inicio, fim }: IAgenda) => (
                         <Grid item key={id}>
                             <Button onClick={() => mudarAgenda(id)} variant="outlined" >{nome}</Button>
                         </Grid>))
                     }
-                    <Grid item key="id_solo">
-                        <Button onClick={abrirFormularioAgenda} variant="outlined" startIcon={<AddIcon color="primary" />}>Adicionar agenda</Button>
+                    <Grid item key="id_solo" marginRight="0" sx={{ margin: 'auto 0 auto auto' }}>
+                        <ButtonGroup variant="outlined" aria-label="outlined button group">
+                            <Button onClick={abrirFormularioAgenda} variant="outlined" startIcon={<AddIcon color="primary" />}>Adicionar agenda</Button>
+                            <Button startIcon={<EditIcon />}>Editar Agenda</Button>
+                            <Button color="warning" startIcon={<DeleteForeverIcon />}>Remover Agenda</Button>
+                        </ButtonGroup>
                     </Grid>
                 </Grid>
             </Box>

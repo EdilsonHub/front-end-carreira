@@ -28,7 +28,9 @@ import { IAgenda } from '../../../store/FormAgenda.store';
 
 const validationSchema = () => {
     return yup.object({
-        nome: yup.string().required('O nome da agenda é obrigatório')
+        nome: yup.string().required('O nome da agenda é obrigatório'),
+        inicio: yup.string().required('Campo obrigatório'),
+        fim: yup.string().required('Campo obrigatório')
     })
 }
 
