@@ -1,7 +1,6 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -28,7 +27,7 @@ interface IProps {
 
 const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto }) => {
     const dispatch = useDispatch();
-    const { adicionar, editar, deletar, agendar } = tooltips;
+    const { adicionar, editar, deletar /*, agendar */} = tooltips;
 
     const handleOnclickAdd = () => {
         dispatch(setIdProjeto(''));

@@ -14,7 +14,7 @@ interface IState {
     dados: IAgenda
 } 
 
-const initialState = {
+const initialState: IState = {
     visibilidade: false,
     dados: {
         id: "",

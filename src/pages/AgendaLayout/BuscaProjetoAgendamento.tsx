@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IProjeto, selectProjetos } from '../../store/Projetos.store';
-import { addAgendamentos } from '../../store/Agendamento.store';
+import { addAgendamentos, selectAgendamentos } from '../../store/Agendamento.store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Autocomplete, TextField, Breadcrumbs, Typography, Box, Grid } from '@mui/material';
 
 
 import { Form } from '@unform/web';
-import { FormHandles, Scope, SubmitHandler } from '@unform/core';
+import { FormHandles, SubmitHandler } from '@unform/core';
 import DateTimePicker from '../../components/Form/Inputs/DateTimePicker';
 
 
@@ -26,6 +26,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
 
     const dispatch = useDispatch();
     const { dados: projetos } = useSelector(selectProjetos);
+    const { dados: agendamentos } = useSelector(selectAgendamentos);
 
     const [projetosEscolhiveis, setProjetosEscolhiveis] = useState<IProjeto[]>(projetosEscolhiveisParams);
     const [projetoEscolhido, setProjetoEscolhido] = useState<IProjeto | null>(null);
@@ -36,13 +37,28 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
         () => {
             if (projetoEscolhido) {
                 setProjetoPath(state => ([...state, projetoEscolhido]));
-                setProjetosEscolhiveis(projetos.filter(n => n.idProjetoSuperior === projetoEscolhido.id));
+                setProjetosEscolhiveis(projetos.filter(p => (
+                    p.idProjetoSuperior === projetoEscolhido.id 
+                    && agendamentos.filter(a => a.idProjeto === p.id).length === 0 //todo: passar a lógica desta linha para desabilitar escolha, e não excluí-la 
+                    )));
                 setProjetoAtual(projetoEscolhido);
                 setProjetoEscolhido(null);
             }
         },
-        [projetoEscolhido]
+        [projetoEscolhido, projetos]
     );
+
+    useEffect(
+        () => {
+            setProjetoPath([]);
+            setProjetoEscolhido(null);
+            setProjetosEscolhiveis(projetosEscolhiveisParams);
+            setProjetoAtual(null);
+        },
+        [idAgenda, projetosEscolhiveisParams]
+    );
+
+
 
     const escolherProjetoDoPath = (projeto: IProjeto | null | undefined) => {
         if (projeto) {
@@ -53,7 +69,6 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
             setProjetoEscolhido(null);
             setProjetosEscolhiveis(projetosEscolhiveisParams);
             setProjetoAtual(null);
-
         }
     }
 
@@ -116,7 +131,11 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
                         options={projetosEscolhiveis}
                         sx={{ width: 300 }}
                         getOptionLabel={option => option.nome}
+                        
+                        groupBy={(option) => option?.grupo || 'nada'}
+
                         renderInput={(params) => <TextField {...params} label={projetoAtual?.nome || 'Projetos disponíveis'} size="small" placeholder='Escolha um projeto' fullWidth />}
+                        
                         value={projetoEscolhido}
                         onChange={(event: any, newValue: IProjeto | null) => {
                             setProjetoEscolhido(newValue);

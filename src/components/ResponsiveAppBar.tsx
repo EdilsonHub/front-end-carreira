@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface IPages {
   name: string;
@@ -157,7 +157,3 @@ const ResponsiveAppBar = () => {
   );
 };
 export default ResponsiveAppBar;
-function useNavegate() {
-  throw new Error('Function not implemented.');
-}
-

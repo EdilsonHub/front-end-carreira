@@ -18,7 +18,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
 import { IAgendamento } from '../../store/Agendamento.store';
-import { TableHead, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 interface TablePaginationActionsProps {
   count: number;

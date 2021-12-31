@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, TimePicker } from '@mui/lab';
-import { TextField, Box, Grid, Button, Breadcrumbs, Typography, ButtonGroup } from '@mui/material';
+import { Box, Grid, Button, Breadcrumbs, Typography } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAgendas, IAgenda } from '../../store/Agenda.store';
-import { selectAgendamentos, IAgendamento, addAgendamentos } from '../../store/Agendamento.store';
+import { selectAgendamentos, IAgendamento } from '../../store/Agendamento.store';
 import { selectProjetos, IProjeto } from '../../store/Projetos.store';
 
 import { setVisibilidade, setIdAgenda as setIdFormAgenda, setIdAgendaSuperior } from '../../store/FormAgenda.store';
@@ -15,8 +14,6 @@ import { setVisibilidade, setIdAgenda as setIdFormAgenda, setIdAgendaSuperior } 
 import BuscaProjetoAgendamento from './BuscaProjetoAgendamento';
 
 import CustomPaginationActionsTable from '../../components/TablePaginationActions';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import ListaProjeto from '../../components/ListaProjeto';
 
 interface IProps {
     idAgenda: string;
@@ -54,17 +51,15 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
 
     const dispatch = useDispatch()
 
-    const handleOnclickAgendarProjeto = () => {
-        // setListaBuscadores([...listaBuscadores, <BuscaProjeto/ >]);
-    };
+    // const handleOnclickAgendarProjeto = () => {
+    //     // setListaBuscadores([...listaBuscadores, <BuscaProjeto/ >]);
+    // };
 
     const [agendaAtual, setAgendaAtual] = useState<IAgenda>();
     const [agendamentoAtual, setAgendamentoAtual] = useState<IAgendamento[]>([]);
     const [historicoAgendas, setHistoricoAgendas] = useState<IAgenda[]>([]);
     const [agendasDisponiveis, setAgendasDisponiveis] = useState<IAgenda[]>([]);
     const [projetosEscolhiveis, setProjetosEscolhiveis] = useState<IProjeto[]>([]);
-
-
 
 
     useEffect(() => {
@@ -80,16 +75,30 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         setAgendamentoAtual(agendamentos.filter(n => n.idAgenda === idAgenda));
     }, [agendamentos, idAgenda]);
 
+
     useEffect(() => {
-        let projetosRoot = projetos.filter(p => (!p.idProjetoSuperior && agendamentos.filter(ag => ag.idProjeto === p.id).length === 0));
+        const agrupar = (p: IProjeto[], grupo: string) => p.map(n => ({...n, grupo })) ;
+        const projetosRoot = projetos.filter(p => (
+            !p.idProjetoSuperior
+            && agendamentos.filter(ag => ag.idProjeto === p.id).length === 0
+        ));
         let projetosAgendamentosAgendaMae: IProjeto[] = [];
         let agendalentosAgendaMae: IAgendamento[] = [];
         if (agendaAtual?.idAgendaSuperior) {
             agendalentosAgendaMae = agendamentos.filter(n => (n.idAgenda === agendaAtual.idAgendaSuperior));
             projetosAgendamentosAgendaMae = projetos.filter(n => agendalentosAgendaMae.map(n => n.idProjeto).includes(n.id))
         }
-        setProjetosEscolhiveis([...projetosRoot, ...projetosAgendamentosAgendaMae]);
-    }, [idAgenda]);
+
+        const getNomeAgendaAnterior = () => {
+            if(historicoAgendas.length < 2) return "NÃO POSSUÍ AGENDA SUPERIOR";
+            const indicePenultimo = historicoAgendas.length - 2;
+            return historicoAgendas[indicePenultimo].nome.toUpperCase();
+        }
+        setProjetosEscolhiveis([
+            ...agrupar(projetosAgendamentosAgendaMae, getNomeAgendaAnterior()),
+            ...agrupar(projetosRoot, "NÃO AGENDADOS")
+        ]);
+    }, [idAgenda, agendaAtual?.idAgendaSuperior, agendamentos, projetos, historicoAgendas]);
 
     const mudarAgenda = (idAgenda: string) => {
         setIdAgenda(idAgenda)
@@ -101,10 +110,10 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         dispatch(setIdAgendaSuperior(idAgenda));
     }
 
-    const getHeaderTabela = () => {
-        if(!agendaAtual) return "Nenhuma agenda selecionada";
-        return `${agendaAtual.inicio || 'DATA NÃO ATRIBUÍDA'} à ${agendaAtual.fim || 'DATA NÃO ATRIBUÍDA'} `;
-    }
+    // const getHeaderTabela = () => {
+    //     if(!agendaAtual) return "Nenhuma agenda selecionada";
+    //     return `${agendaAtual.inicio || 'DATA NÃO ATRIBUÍDA'} à ${agendaAtual.fim || 'DATA NÃO ATRIBUÍDA'} `;
+    // }
 
 
     return (
@@ -116,7 +125,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 </Button>
                 {historicoAgendas.map(({ id, nome, inicio, fim }: IAgenda, index: number) => (
                     <Button key={id} onClick={() => mudarAgenda(id)} disabled={historicoAgendas.length === (index + 1)}>
-                        <Typography variant="h5" component="h5">{(historicoAgendas.length === (index + 1))? `${nome} (${inicio} à ${fim})` : nome }</Typography>
+                        <Typography variant="h5" component="h5">{(historicoAgendas.length === (index + 1)) ? `${nome} (${inicio} à ${fim})` : nome}</Typography>
                     </Button>
                 ))
                 }

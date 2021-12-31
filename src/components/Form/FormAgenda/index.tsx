@@ -5,13 +5,13 @@ import { Button, ButtonGroup, Grid } from '@mui/material';
 import BoxFormulario from './BoxFormulario';
 
 import { Form } from '@unform/web';
-import { FormHandles, Scope, SubmitHandler } from '@unform/core';
+import { FormHandles, SubmitHandler } from '@unform/core';
 import TextField from '../Inputs/TextField'
 import DateTimePicker from '../Inputs/DateTimePicker';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectFormAgenda, setVisibilidade } from '../../../store/FormAgenda.store';
-import { addAgenda, selectAgendas } from '../../../store/Agenda.store';
+import { addAgenda } from '../../../store/Agenda.store';
 
 
 import * as yup from 'yup';
@@ -36,7 +36,7 @@ const FormAgenda: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const dispatch = useDispatch();
     const { dados: { idAgendaSuperior } } = useSelector(selectFormAgenda);
-    const { dados } = useSelector(selectAgendas);
+    // const { dados } = useSelector(selectAgendas);
 
 
     const salvar = (dados: IAgenda) => {

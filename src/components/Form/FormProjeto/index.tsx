@@ -31,6 +31,7 @@ export interface IDadosFormulario { //isto deveria estar no store
         horas: string;
         minutos: string;
     }
+    grupo?: string; //para usar no autocomplete no agendamento do projeto
 }
 
 const validationSchema = () => {
