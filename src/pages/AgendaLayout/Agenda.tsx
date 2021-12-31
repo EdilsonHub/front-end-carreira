@@ -156,6 +156,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 (historicoAgendas.length > 0 && projetosEscolhiveis.length > 0) && <BuscaProjetoAgendamento
                     projetosEscolhiveis={projetosEscolhiveis}
                     idAgenda={idAgenda}
+                    idAgendaSuperior={agendaAtual?.idAgendaSuperior || ""}
                 />
             }
 

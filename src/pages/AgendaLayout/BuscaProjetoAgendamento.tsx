@@ -13,6 +13,7 @@ import DateTimePicker from '../../components/Form/Inputs/DateTimePicker';
 interface IProps {
     projetosEscolhiveis: IProjeto[];
     idAgenda: string;
+    idAgendaSuperior: string;
 }
 
 interface IFormAgendamento {
@@ -20,7 +21,7 @@ interface IFormAgendamento {
     fim: string;
 }
 
-const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projetosEscolhiveisParams, idAgenda }) => {
+const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projetosEscolhiveisParams, idAgenda, idAgendaSuperior }) => {
 
     const formRef = useRef<FormHandles>(null);
 
@@ -38,14 +39,14 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
             if (projetoEscolhido) {
                 setProjetoPath(state => ([...state, projetoEscolhido]));
                 setProjetosEscolhiveis(projetos.filter(p => (
-                    p.idProjetoSuperior === projetoEscolhido.id 
-                    && agendamentos.filter(a => a.idProjeto === p.id).length === 0 //todo: passar a lógica desta linha para desabilitar escolha, e não excluí-la 
-                    )));
+                    p.idProjetoSuperior === projetoEscolhido.id
+                    // && agendamentos.filter(a => a.idProjeto === p.id).length === 0 //todo: passar a lógica desta linha para desabilitar escolha, e não excluí-la 
+                )));
                 setProjetoAtual(projetoEscolhido);
                 setProjetoEscolhido(null);
             }
         },
-        [projetoEscolhido, projetos]
+        [projetoEscolhido, projetos, agendamentos]
     );
 
     useEffect(
@@ -57,8 +58,6 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
         },
         [idAgenda, projetosEscolhiveisParams]
     );
-
-
 
     const escolherProjetoDoPath = (projeto: IProjeto | null | undefined) => {
         if (projeto) {
@@ -75,7 +74,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
     const getCaminhoHistoricoProjeto = () => {
         const nomes = projetoPath.map(n => n.nome);
         nomes.pop();
-        return (projetoPath.length > 1)? (nomes.join(" / ") + " / ") : "";
+        return (projetoPath.length > 1) ? (nomes.join(" / ") + " / ") : "";
     }
 
     const agendarProjeto = (date: IFormAgendamento) => {
@@ -104,7 +103,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
 
 
     return (
-        <>
+        <> 
             <Box sx={{ paddingTop: 2, paddingBottom: 2 }}>
                 <Breadcrumbs aria-label="breadcrumb" component="h5" >
                     <Button key="todos_projetos_id" onClick={() => { escolherProjetoDoPath(null) }} disabled={projetoPath.length === 0} sx={{ p: 0 }}>
@@ -122,25 +121,34 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={{}} ref={formRef} >
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={5} xl={6}>
-                    <Autocomplete
-                        style={{ width: '100%' }}
-                        // fullWidth
-                        disablePortal
-                        disabled={(projetosEscolhiveis.length === 0)}
-                        id="combo-box-demo"
-                        options={projetosEscolhiveis}
-                        sx={{ width: 300 }}
-                        getOptionLabel={option => option.nome}
-                        
-                        groupBy={(option) => option?.grupo || 'nada'}
+                        <Autocomplete
+                            style={{ width: '100%' }}
+                            // fullWidth
+                            disablePortal
+                            disabled={(projetosEscolhiveis.length === 0)}
+                            id="combo-box-demo"
+                            options={projetosEscolhiveis}
+                            sx={{ width: 300 }}
+                            getOptionLabel={option => option.nome}
 
-                        renderInput={(params) => <TextField {...params} label={projetoAtual?.nome || 'Projetos disponíveis'} size="small" placeholder='Escolha um projeto' fullWidth />}
-                        
-                        value={projetoEscolhido}
-                        onChange={(event: any, newValue: IProjeto | null) => {
-                            setProjetoEscolhido(newValue);
-                        }}
-                    />
+                            getOptionDisabled={(p: IProjeto) => agendamentos.filter(a => (a.idAgenda !== idAgendaSuperior && a.idProjeto === p.id)).length !== 0}
+
+                            groupBy={(projetoPath.length > 1 || true) ? ((option) => option?.grupo || '') : () => ''}
+
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label={projetoAtual?.nome || 'Projetos disponíveis'}
+                                    size="small" placeholder={projetoAtual? `Escolha um subprojeto de ${projetoAtual.nome}` : 'Escolha um projeto'}
+                                    fullWidth
+                                />
+                            )}
+
+                            value={projetoEscolhido}
+                            onChange={(event: any, newValue: IProjeto | null) => {
+                                setProjetoEscolhido(newValue);
+                            }}
+                        />
                     </Grid>
                     <Grid item xs={12} md={2}>
                         <DateTimePicker label="Data inicial" name="inicio" />

@@ -21,7 +21,7 @@ const BoxFormulario: React.FC<IPropsBoxFormulario> = ({ children, titulo }) => {
         onClose={() => dispatch(setVisibilidade(false))}
     >
         <Paper sx={{ p: 1, marginRight: 2 }} elevation={0} >
-            <Typography variant="h5" component="h6" paddingLeft={1} align="center" >{titulo}</Typography>
+            <Typography variant="h5" component="h6" align="center" >{titulo}</Typography>
             <Box
                 component="div"
                 sx={{

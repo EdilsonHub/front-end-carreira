@@ -217,24 +217,6 @@ const getProjetosTeste = () => ([
     },
     {
         idProjetoSuperior: '10',
-        id: '13',
-        nome: 'SECTION 1',
-        custoPrevisto: '',
-        descricao: '',
-        dataLimite: '',
-        agenda: {
-            inicio: '',
-            fim: '',
-        },
-        tempoPrevisto: {
-            meses: '12',
-            dias: '',
-            horas: '',
-            minutos: ''
-        }
-    },
-    {
-        idProjetoSuperior: '10',
         id: '14',
         nome: 'SECTION 2',
         custoPrevisto: '',
