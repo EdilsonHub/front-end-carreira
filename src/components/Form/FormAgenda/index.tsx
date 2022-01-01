@@ -11,6 +11,8 @@ import DateTimePicker from '../Inputs/DateTimePicker';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectFormAgenda, setVisibilidade } from '../../../store/FormAgenda.store';
+import { selectAgendas, atualizarAgenda } from '../../../store/Agenda.store';
+
 import { addAgenda } from '../../../store/Agenda.store';
 
 
@@ -37,14 +39,27 @@ const validationSchema = () => {
 const FormAgenda: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const dispatch = useDispatch();
-    const { dados: { idAgendaSuperior } } = useSelector(selectFormAgenda);
+    const { dados: agendas } = useSelector(selectAgendas);
+    const { dados: { idAgendaSuperior, id: idAgenda } } = useSelector(selectFormAgenda);
     // const { dados } = useSelector(selectAgendas);
 
 
-    const salvar = (dados: IAgenda) => {
+    const salvarNovaAgenda = (dados: IAgenda) => {
         const idFalso = (new Date()).getTime().toString();
         dispatch(addAgenda({ ...dados, idAgendaSuperior, id: idFalso }));
         return idFalso;
+    }
+
+    const salvarEdicaoAgenda = (dados: IAgenda) => {
+        dispatch(atualizarAgenda({ ...dados, id: idAgenda }));
+        dispatch(setVisibilidade(false));
+    }
+
+    const salvar = (dados: IAgenda) => {
+        if(!idAgenda) {
+            return salvarNovaAgenda(dados);
+        }
+        salvarEdicaoAgenda(dados);
     }
 
     const handleOnclikLeft = () => {
@@ -68,7 +83,29 @@ const FormAgenda: React.FC = () => {
     };
 
 
-    const getInitialData = () => ({});
+    const getInitialData = () => {
+        if (!idAgenda) {
+            return {};
+        }
+        const agendaArray = agendas.filter(n => n.id === idAgenda);
+        if (agendaArray.length === 0) {
+            return {}
+        }
+        const agenda = agendaArray[0];
+
+        const inverterDiaMes = (dataHora: string) => {
+            if (!dataHora.trim()) return "";
+            const [data, hora] = dataHora.split(' ');
+            const [dia, mes, ano] = data.split('/');
+            return `${mes}/${dia}/${ano} ${hora}`;
+        }
+
+        return {
+            ...agenda,
+            inicio: inverterDiaMes(agenda.inicio),
+            fim: inverterDiaMes(agenda.fim)
+        };
+    };
 
     return (
         <BoxFormulario titulo="Cadastrar Nova Agenda">

@@ -6,7 +6,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAgendas, IAgenda } from '../../store/Agenda.store';
+import { selectAgendas, IAgenda, removerAgenda } from '../../store/Agenda.store';
 import { selectAgendamentos, IAgendamento } from '../../store/Agendamento.store';
 import { selectProjetos, IProjeto } from '../../store/Projetos.store';
 
@@ -112,6 +112,20 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         dispatch(setIdAgendaSuperior(idAgenda));
     }
 
+    const abrirEdicaoAgenda = () => {
+        dispatch(setVisibilidade(true));
+        dispatch(setIdFormAgenda(idAgenda));
+        dispatch(setIdAgendaSuperior(""));
+
+    }
+
+    const handleClickRemoverAgenda = () => {
+        if (agendaAtual) {
+            dispatch(removerAgenda(agendaAtual.id));
+            setIdAgenda(agendaAtual.idAgendaSuperior);
+        }
+    };
+
     // const getHeaderTabela = () => {
     //     if(!agendaAtual) return "Nenhuma agenda selecionada";
     //     return `${agendaAtual.inicio || 'DATA NÃO ATRIBUÍDA'} à ${agendaAtual.fim || 'DATA NÃO ATRIBUÍDA'} `;
@@ -143,8 +157,8 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                     <Grid item key="id_solo" marginRight="0" sx={{ margin: 'auto 0 auto auto' }}>
                         <ButtonGroup variant="outlined" aria-label="outlined button group">
                             <Button onClick={abrirFormularioAgenda} variant="outlined" startIcon={<AddIcon color="primary" />}>Adicionar agenda</Button>
-                            <Button startIcon={<EditIcon />}>Editar Agenda</Button>
-                            <Button color="warning" startIcon={<DeleteForeverIcon />}>Remover Agenda</Button>
+                            {agendaAtual && <Button onClick={abrirEdicaoAgenda} startIcon={<EditIcon />}>Editar Agenda</Button>}
+                            {(agendaAtual && agendamentoAtual.length < 1 && agendasDisponiveis.length === 0) && <Button onClick={handleClickRemoverAgenda} color="warning" startIcon={<DeleteForeverIcon />}>Remover Agenda</Button>}
                         </ButtonGroup>
                     </Grid>
                 </Grid>
@@ -156,7 +170,8 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
                 <Box component="div" sx={{ paddingTop: 2, paddingBottom: 2, textAlign: 'right' }}>
                     <Button variant="outlined" onClick={handleOnclickAgendarProjeto} startIcon={<AddIcon color="primary" />} >Abrir busca de projeto para agendamento</Button>
                 </Box>
-            )} */}
+            )} 
+            */}
 
             {
                 (historicoAgendas.length > 0 && projetosEscolhiveis.length > 0) && <BuscaProjetoAgendamento
