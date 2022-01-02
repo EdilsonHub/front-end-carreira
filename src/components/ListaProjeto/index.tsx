@@ -14,14 +14,17 @@ const ListaProjeto: React.FC<IProps> = ({ dados, idProjetoSuperior, labelBtnAddP
     const [idProjetoAberto, setIdProjetoAberto] = useState<string | null>(null);
 
     return (
-        <div>
-            {
-                dados.map((props: IDadosFormulario, index: number) => (
-                    <Projeto dadosFormulario={props} idProjetoAberto={idProjetoAberto} setIdProjetoAberto={setIdProjetoAberto} key={props.id} />
-                ))
+        <>
+            {(dados.length > 0) && <div style={{ marginTop: '8px' }}>
+                {
+                    dados.map((props: IDadosFormulario, index: number) => (
+                        <Projeto dadosFormulario={props} idProjetoAberto={idProjetoAberto} setIdProjetoAberto={setIdProjetoAberto} key={props.id} />
+                    ))
+                }
+                {/* <Button fullWidth variant="text" size="small" color="primary" onClick={() => dispatch(openNovo(idProjetoSuperior))}><AddIcon />{labelBtnAddProjeto}</Button>s */}
+            </div>
             }
-            {/* <Button fullWidth variant="text" size="small" color="primary" onClick={() => dispatch(openNovo(idProjetoSuperior))}><AddIcon />{labelBtnAddProjeto}</Button>s */}
-        </div>
+        </>
     );
 }
 

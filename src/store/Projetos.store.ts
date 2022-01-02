@@ -21,7 +21,7 @@ const projetosSlice = createSlice({
         addProjeto(state, action: PayloadAction<IDadosFormulario>) {
             state.dados.push(action.payload);
         },
-        atualizarProjeto(state, action: PayloadAction<IDadosFormulario>) {
+        atualizarProjeto (state, action: PayloadAction<IDadosFormulario>) {
             state.dados.forEach(projeto => {
                 if (projeto.id === action.payload.id) {
                     const index = state.dados.indexOf(projeto);
@@ -29,7 +29,7 @@ const projetosSlice = createSlice({
                 }
             });
         },
-        removeProjeto(state, action: PayloadAction<string>) {
+        removeProjeto (state, action: PayloadAction<string>) {
             if (state.dados.filter(n => n.idProjetoSuperior === action.payload).length === 0)
 
                 state.dados.forEach(projeto => {
@@ -38,11 +38,25 @@ const projetosSlice = createSlice({
                         state.dados.splice(index, 1);
                     }
                 });
+        },
+        setTrueConcluido (state, action: PayloadAction<string>) {
+            state.dados.forEach(projeto => {
+                if (projeto.id === action.payload) {
+                    projeto.concluido = true;
+                }
+            });
+        },
+        setFalseConcluido (state, action: PayloadAction<string>) {
+            state.dados.forEach(projeto => {
+                if (projeto.id === action.payload) {
+                    projeto.concluido = false;
+                }
+            });
         }
     }
 })
 
 export type  { IDadosFormulario as IProjeto };
-export const { addProjeto, atualizarProjeto, removeProjeto} = projetosSlice.actions;
+export const { addProjeto, atualizarProjeto, removeProjeto, setTrueConcluido, setFalseConcluido } = projetosSlice.actions;
 export const selectProjetos = (state: RootState) => state.projetos;
 export default projetosSlice.reducer;

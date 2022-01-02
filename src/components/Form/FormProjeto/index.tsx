@@ -10,7 +10,7 @@ import DateTimePicker from '../Inputs/DateTimePicker';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectData, setVisibilidade } from '../../../store/FormProjeto.store';
-import { selectProjetos, addProjeto, atualizarProjeto } from '../../../store/Projetos.store';
+import { selectProjetos, addProjeto, atualizarProjeto, setFalseConcluido } from '../../../store/Projetos.store';
 
 
 
@@ -32,6 +32,7 @@ export interface IDadosFormulario { //isto deveria estar no store
         minutos: string;
     }
     grupo?: string; //para usar no autocomplete no agendamento do projeto
+    concluido?: boolean;
 }
 
 const validationSchema = () => {
@@ -61,6 +62,7 @@ const FormProjeto: React.FC = () => {
     const salvarProjeto = (dados: IDadosFormulario) => {
         const idFalso = (new Date()).getTime().toString();
         dispatch(addProjeto({ ...dados, idProjetoSuperior, id: idFalso }));
+        dispatch(setFalseConcluido(idProjetoSuperior));
         return idFalso;
     }
 

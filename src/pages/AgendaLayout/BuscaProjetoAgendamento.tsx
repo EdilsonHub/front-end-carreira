@@ -132,7 +132,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
                             sx={{ width: 300 }}
                             getOptionLabel={option => option.nome}
 
-                            getOptionDisabled={(p: IProjeto) => agendamentos.filter(a => (a.idAgenda !== idAgendaSuperior && a.idProjeto === p.id)).length !== 0}
+                            getOptionDisabled={(p: IProjeto) => p.concluido || (agendamentos.filter(a => (a.idAgenda !== idAgendaSuperior && a.idProjeto === p.id)).length !== 0)}
 
                             groupBy={(projetoPath.length > 1 || true) ? ((option) => option?.grupo || '') : () => ''}
 

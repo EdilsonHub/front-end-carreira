@@ -11,14 +11,22 @@ import TablePagination, { LabelDisplayedRowsArgs } from '@mui/material/TablePagi
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+// import EditIcon from '@mui/icons-material/Edit';
 
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 
-import { IAgendamento } from '../../store/Agendamento.store';
+import LightTooltip from '../LightTooltip';
+
+import { IAgendamento, removerAgendamento } from '../../store/Agendamento.store';
+import { setTrueConcluido } from '../../store/Projetos.store';
+
 import { Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
 
 interface TablePaginationActionsProps {
   count: number;
@@ -113,6 +121,15 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ rows }) => {
     setPage(0);
   };
 
+  const dispatch = useDispatch();
+
+  const handleOnClickRemoverAgendamento = (id: string) => () => {
+    dispatch(removerAgendamento(id));
+  }
+  const handleOnClickConcluirProjeto = (id: string) => () => {
+    dispatch(setTrueConcluido(id));
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -124,16 +141,41 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ rows }) => {
           ).map((row: IAgendamento) => (
             <TableRow key={row.id}>
               <TableCell style={{ width: 140 }}>
-                <Typography>{row.inicio}</Typography>
+                <Typography color={row.projetoConcluido? "darkgrey" : "dark"} >{row.inicio}</Typography>
               </TableCell>
               <TableCell style={{ width: 140 }} align="left">
-                <Typography>{row.fim}</Typography>
+                <Typography color={row.projetoConcluido? "darkgrey" : "dark"} >{row.fim}</Typography>
               </TableCell>
               <TableCell align="left">
-                <Typography> <Typography color="lightgray" component="span">{row.caminhoProjeto}</Typography> {row.nomeProjeto}</Typography>
+                <Typography color={row.projetoConcluido? "darkgrey" : "dark"}> <Typography color="lightgray" component="span">{row.caminhoProjeto}</Typography >{row.nomeProjeto}</Typography>
               </TableCell>
-              <TableCell style={{ width: 120 }} align="right">
-                AÇÕES
+              <TableCell style={{ width: 120, padding: 0 }} align="right">
+
+                {
+                  !row.projetoConcluido && <>
+                    <LightTooltip title="Finalizar" placement="top-start">
+                      <IconButton
+                        onClick={handleOnClickConcluirProjeto(row.idProjeto)}
+                        // disabled={page === 0}
+                        aria-label="first page"
+                      >
+                        <CheckIcon color="success" />
+                      </IconButton>
+                    </LightTooltip>
+
+                    <LightTooltip title="Remover" placement="top-start">
+                      <IconButton
+                        onClick={handleOnClickRemoverAgendamento(row.id)}
+                        // disabled={page === 0}
+                        aria-label="first page"
+                      >
+                        <DeleteForeverIcon color='error' />
+                      </IconButton>
+                    </LightTooltip>
+                  </>
+                }
+
+
               </TableCell>
             </TableRow>
           ))}
@@ -169,7 +211,7 @@ const CustomPaginationActionsTable: React.FC<IProps> = ({ rows }) => {
           </TableRow>
         </TableFooter>
       </Table>
-    </TableContainer>
+    </TableContainer >
   );
 }
 

@@ -23,11 +23,12 @@ const BoxFormulario: React.FC<IPropsBoxFormulario> = ({ titulo, children }) => {
             onClose={() => dispatch(setVisibilidade(false))}
         >
             <Paper sx={{ p: 1, marginRight: 2 }} elevation={0} >
-                <Typography variant="h5" component="h6" paddingLeft={1} align="center" >{titulo}</Typography>
+                <Typography variant="h5" component="h6" paddingLeft={1} align="center" sx={{textTransform: 'uppercase'}} >{titulo}</Typography>
                 <Box
                     component="div"
                     sx={{
-                        '& .MuiTextField-root': { m: 1 }
+                        '& .MuiTextField-root': { m: 1 },
+                        textTransform: 'uppercase'
                     }}
                 // noValidate
                 // autoComplete="off"

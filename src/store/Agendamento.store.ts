@@ -9,6 +9,7 @@ export interface IAgendamento {
     nomeProjeto: string;
     inicio: string;
     fim: string;
+    projetoConcluido?: boolean;
 }
 
 interface IState {
@@ -25,10 +26,18 @@ const agendamentosSlice = createSlice({
     reducers: {
         addAgendamentos (state, action: PayloadAction<IAgendamento>) {
             state.dados.push(action.payload);
+        },
+        removerAgendamento (state, action: PayloadAction<string>) {
+            state.dados.forEach(agendamento => {
+                if (agendamento.id === action.payload) {
+                    const index = state.dados.indexOf(agendamento);
+                    state.dados.splice(index, 1);
+                }
+            });
         }
     }
 });
 
-export const { addAgendamentos } = agendamentosSlice.actions;
+export const { addAgendamentos, removerAgendamento } = agendamentosSlice.actions;
 export const selectAgendamentos = (state: RootState) => state.agendamentos;
 export default agendamentosSlice.reducer;

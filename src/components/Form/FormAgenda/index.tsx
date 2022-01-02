@@ -15,18 +15,8 @@ import { selectAgendas, atualizarAgenda } from '../../../store/Agenda.store';
 
 import { addAgenda } from '../../../store/Agenda.store';
 
-
 import * as yup from 'yup';
 import { IAgenda } from '../../../store/FormAgenda.store';
-
-
-// export interface IAgenda { //código repetido
-//     id: string;
-//     idAgendaSuperior: string
-//     nome: string;
-//     inicio: string;
-//     fim: string;
-// }
 
 const validationSchema = () => {
     return yup.object({
@@ -112,7 +102,7 @@ const FormAgenda: React.FC = () => {
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={getInitialData()} ref={formRef} >
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={5}>
-                        <TextField id="nome" name="nome" label="Nome da Agenda" placeholder="Digite o nome do projeto" maxRows={4} multiline={true} />
+                        <TextField id="nome" name="nome" label="Nome da Agenda" placeholder="Digite o nome da agenda" maxRows={4} multiline={true} />
                     </Grid>
                     <Grid item xs={12} md={2}>
                         <DateTimePicker label="Inicio Agenda" name="inicio" />

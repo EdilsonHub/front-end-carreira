@@ -51,11 +51,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
     const { dados: agendamentos } = useSelector(selectAgendamentos);
     const { dados: projetos } = useSelector(selectProjetos);
 
-    const dispatch = useDispatch()
-
-    // const handleOnclickAgendarProjeto = () => {
-    //     // setListaBuscadores([...listaBuscadores, <BuscaProjeto/ >]);
-    // };
+    const dispatch = useDispatch();
 
     const [agendaAtual, setAgendaAtual] = useState<IAgenda>();
     const [agendamentoAtual, setAgendamentoAtual] = useState<IAgendamento[]>([]);
@@ -74,8 +70,13 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
     }, [agendas, idAgenda]);
 
     useEffect(() => {
-        setAgendamentoAtual(agendamentos.filter(n => n.idAgenda === idAgenda));
-    }, [agendamentos, idAgenda]);
+        const idsProjetosConluidos: string[] = projetos.filter(n => n.concluido).map(p => p.id);
+        const agendamentoPretencentesAgendaAtual = agendamentos.filter(n => n.idAgenda === idAgenda);
+        const agendamentosSalvos = agendamentoPretencentesAgendaAtual.map(agendamento => {
+               return { ...agendamento, projetoConcluido: (idsProjetosConluidos.includes(agendamento.idProjeto))}
+        });
+        setAgendamentoAtual(agendamentosSalvos);
+    }, [agendamentos, idAgenda, projetos]);
 
 
     useEffect(() => {
@@ -126,18 +127,12 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         }
     };
 
-    // const getHeaderTabela = () => {
-    //     if(!agendaAtual) return "Nenhuma agenda selecionada";
-    //     return `${agendaAtual.inicio || 'DATA NÃO ATRIBUÍDA'} à ${agendaAtual.fim || 'DATA NÃO ATRIBUÍDA'} `;
-    // }
-
-
     return (
         <>
             {/* idAgenda: -{idAgenda}- */}
             <Breadcrumbs aria-label="breadcrumb" component="h5" >
                 <Button key="id_solo" onClick={() => mudarAgenda('')} >
-                    <Typography variant="h5" component="h5">Home</Typography>
+                    <Typography variant="h5" component="h5">Agendamentos</Typography>
                 </Button>
                 {historicoAgendas.map(({ id, nome, inicio, fim }: IAgenda, index: number) => (
                     <Button key={id} onClick={() => mudarAgenda(id)} disabled={historicoAgendas.length === (index + 1)}>

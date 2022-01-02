@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { useDispatch } from 'react-redux';
 
-import LightTooltip from './LightTooltip'
+import LightTooltip from '../LightTooltip';
 
 import { setIdProjetoSuperior, setVisibilidade, setIdProjeto, setNomeFormulario } from '../../store/FormProjeto.store';
 import { removeProjeto } from '../../store/Projetos.store';
@@ -23,11 +23,12 @@ interface IProps {
     idProjeto: string;
     nomeProjeto: string
     tooltips: ITooltips;
+    projetoConcluido: boolean
 }
 
-const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto }) => {
+const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto, projetoConcluido }) => {
     const dispatch = useDispatch();
-    const { adicionar, editar, deletar /*, agendar */} = tooltips;
+    const { adicionar, editar, deletar /*, agendar */ } = tooltips;
 
     const handleOnclickAdd = () => {
         dispatch(setIdProjeto(''));
@@ -46,7 +47,7 @@ const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto }) => 
 
     const handleOnclickRemove = () => {
         dispatch(removeProjeto(idProjeto));
-    } 
+    }
 
     return (
         <>
@@ -55,21 +56,25 @@ const MenuProjeto: React.FC<IProps> = ({ idProjeto, tooltips, nomeProjeto }) => 
                     <AddIcon color="primary" />
                 </IconButton>
             </LightTooltip>
-            <LightTooltip title={editar} placement="top-start">
-                <IconButton onClick={handleOnclikEdit}>
-                    <EditIcon color="primary" />
-                </IconButton>
-            </LightTooltip>
+            {!projetoConcluido && <>
+                <LightTooltip title={editar} placement="top-start">
+                    <IconButton onClick={handleOnclikEdit}>
+                        <EditIcon color="primary" />
+                    </IconButton>
+                </LightTooltip>
+
+                <LightTooltip title={deletar} placement="top-start">
+                    <IconButton onClick={handleOnclickRemove}>
+                        <DeleteIcon color="error" />
+                    </IconButton>
+                </LightTooltip>
+            </>
+            }
             {/* <LightTooltip title={agendar} placement="top-start">
                 <IconButton>
                     <AccessTimeIcon color="secondary" />
                 </IconButton>
             </LightTooltip> */}
-            <LightTooltip title={deletar} placement="top-start">
-                <IconButton onClick={handleOnclickRemove}>
-                    <DeleteIcon color="error" />
-                </IconButton>
-            </LightTooltip>
         </>
     );
 }

@@ -19,7 +19,7 @@ interface IProps {
 }
 
 const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProjetoAberto }) => {
-    const { id, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda } = dadosFormulario;
+    const { id, nome, descricao, dataLimite, tempoPrevisto, custoPrevisto, agenda, concluido } = dadosFormulario;
 
     const [listaProjetosFilhos, setListaProjetosFilhos] = useState<IDadosFormulario[]>([]);
 
@@ -35,6 +35,10 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
         agendar: labelBtnAgenda
     }
 
+    const handleColorDetalhes = () => {
+        return concluido? "darkGrey" : "grey";
+    }
+
     const handleOnchange = () => {
         setIdProjetoAberto((prev: string) => (prev === id) ? null : id);
     }
@@ -46,54 +50,6 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
         },
         [idProjetoAberto, dados, id]
     );
-
-    // const teste = () => {
-    //     let pais: any[] = [];
-    //     let semFilhos: any[] = [];
-    //     let root: any[] = [];
-
-    //     // for (let i = 0; i < dados.length; i++) {
-    //     //     indices.push([]);
-    //     //  }
-
-
-    //     // if (isNaN(Number(project.idProjetoSuperior))) {
-    //     //     throw new Error("erro: " + project.idProjetoSuperior);
-    //     // }
-
-    //     dados.forEach((project: IDadosFormulario) => {
-    //         if (project.idProjetoSuperior) {
-
-
-
-    //             if (!pais[Number(project.idProjetoSuperior)]) {
-    //                 pais[Number(project.idProjetoSuperior)] = [];
-    //             }
-    //             pais[Number(project.idProjetoSuperior)].push(project.id);
-    //         } else {
-    //             semFilhos.push(project.id)
-    //         }
-    //     })
-
-    //     dados.forEach((project: IDadosFormulario) => {
-    //         if (project.idProjetoSuperior) {
-
-    //             let arrContent = root.filter(n => n.id === project.idProjetoSuperior);
-                
-    //             if (arrContent.length > 0) {
-    //                 arrContent[0].idsFilhos.push(project.id)
-    //             } else {
-    //                 root.push({ id: project.idProjetoSuperior, idsFilhos: [project.id] })
-    //             }
-
-    //         } else {
-    //             root.push({ id: project.id, idsFilhos: [] })
-    //         }
-    //     })
-
-    //     console.log(root);
-    //     console.log([...pais, ...semFilhos]);
-    // }
 
     return (
         <>
@@ -107,7 +63,7 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
                 >
                     <Grid container justifyContent="space-between">
                         <Grid item>
-                            <Typography >{nome}</Typography>
+                            <Typography color={concluido? "darkgrey" : "primary"}>{nome}</Typography>
                         </Grid>
                         <Grid item>
                             {!!dataLimite && <Typography sx={{ color: 'text.secondary', alignSelf: 'center' }}>{dataLimite}</Typography>}
@@ -117,20 +73,20 @@ const Projeto: React.FC<IProps> = ({ dadosFormulario, idProjetoAberto, setIdProj
 
                 <Divider />
 
-                <AccordionDetails sx={{ backgroundColor: 'rgb(240 237 248)', color: '#FFF' }}>
+                <AccordionDetails sx={{ backgroundColor: 'rgb(240 237 248)' }}>
 
                     <Grid container justifyContent="space-between">
-                        <Grid item>{!!descricao && <Detalhes value={descricao} label="Descrição: " />}</Grid>
+                        <Grid item>{!!descricao && <Detalhes color={handleColorDetalhes()} value={descricao} label="Descrição: " />}</Grid>
                         <Grid item style={{ margin: 'auto 0 auto auto' }}>
-                            <MenuProjeto tooltips={tooltipsLabel} idProjeto={id} nomeProjeto={nome} />
+                            <MenuProjeto tooltips={tooltipsLabel} idProjeto={id} nomeProjeto={nome} projetoConcluido={!!concluido}/>
                         </Grid>
                     </Grid>
 
                     <Grid container justifyContent="space-between">
 
-                        {!!custoPrevisto && <Grid item ><Detalhes value={custoPrevisto} label="Custos Previsto: " />  </Grid>}
-                        {!!tempoPrevistoString && <Grid item ><Detalhes value={tempoPrevistoString} label="Tempo Previsto: " />  </Grid>}
-                        {!!agendaString && <Grid item ><Detalhes value={agendaString} label="Agendado: " />  </Grid>}
+                        {!!custoPrevisto && <Grid item ><Detalhes color={handleColorDetalhes()} value={custoPrevisto} label="Custos Previsto: " />  </Grid>}
+                        {!!tempoPrevistoString && <Grid item ><Detalhes color={handleColorDetalhes()} value={tempoPrevistoString} label="Tempo Previsto: " />  </Grid>}
+                        {!!agendaString && <Grid item ><Detalhes color={handleColorDetalhes()} value={agendaString} label="Agendado: " />  </Grid>}
 
                     </Grid>
 
