@@ -10,7 +10,7 @@ import { selectAgendas, IAgenda, removerAgenda } from '../../store/Agenda.store'
 import { selectAgendamentos, IAgendamento } from '../../store/Agendamento.store';
 import { selectProjetos, IProjeto } from '../../store/Projetos.store';
 
-import { setVisibilidade, setIdAgenda as setIdFormAgenda, setIdAgendaSuperior } from '../../store/FormAgenda.store';
+import { setVisibilidade, setIdAgenda as setIdFormAgenda, setIdAgendaSuperior, setNomeFormulario } from '../../store/FormAgenda.store';
 
 
 import BuscaProjetoAgendamento from './BuscaProjetoAgendamento';
@@ -111,13 +111,14 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
         dispatch(setVisibilidade(true));
         dispatch(setIdFormAgenda(''));
         dispatch(setIdAgendaSuperior(idAgenda));
+        dispatch(setNomeFormulario(agendaAtual? `Cadastrar nova agenda contida na agenda: ${agendaAtual.nome}`: "Cadastrar nova agenda" ));
     }
 
     const abrirEdicaoAgenda = () => {
         dispatch(setVisibilidade(true));
         dispatch(setIdFormAgenda(idAgenda));
         dispatch(setIdAgendaSuperior(""));
-
+        dispatch(setNomeFormulario(`Editar agenda: ${agendaAtual?.nome}`));
     }
 
     const handleClickRemoverAgenda = () => {
@@ -132,7 +133,7 @@ const Agenda: React.FC<IProps> = ({ idAgenda, setIdAgenda }) => {
             {/* idAgenda: -{idAgenda}- */}
             <Breadcrumbs aria-label="breadcrumb" component="h5" >
                 <Button key="id_solo" onClick={() => mudarAgenda('')} >
-                    <Typography variant="h5" component="h5">Agendamentos</Typography>
+                    <Typography variant="h5" component="h5">Agendas</Typography>
                 </Button>
                 {historicoAgendas.map(({ id, nome, inicio, fim }: IAgenda, index: number) => (
                     <Button key={id} onClick={() => mudarAgenda(id)} disabled={historicoAgendas.length === (index + 1)}>

@@ -30,7 +30,7 @@ const FormAgenda: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const dispatch = useDispatch();
     const { dados: agendas } = useSelector(selectAgendas);
-    const { dados: { idAgendaSuperior, id: idAgenda } } = useSelector(selectFormAgenda);
+    const { nomeFormulario, dados: { idAgendaSuperior, id: idAgenda } } = useSelector(selectFormAgenda);
     // const { dados } = useSelector(selectAgendas);
 
 
@@ -98,7 +98,7 @@ const FormAgenda: React.FC = () => {
     };
 
     return (
-        <BoxFormulario titulo="Cadastrar Nova Agenda">
+        <BoxFormulario titulo={nomeFormulario}>
             <Form noValidate autoComplete="off" onSubmit={handleSubmit} initialData={getInitialData()} ref={formRef} >
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={5}>

@@ -34,7 +34,7 @@ function CadastroProjetosLayout() {
 
     return (
         <div>
-            <Typography variant="h5" component="h2" color="primary" sx={{ textTransform: 'uppercase' }} >Cadastro de projetos</Typography>
+            <Typography variant="h5" component="h2" color="primary" sx={{ textTransform: 'uppercase' }} >Projetos</Typography>
          
             <Box component="div" sx={{ paddingTop: 2,paddingBottom: 2, textAlign: 'right' }}>
                 <Button variant="outlined" onClick={handleOnclickAddProjeto} startIcon={<AddIcon color="primary" />} >Adicionar Novo Projeto</Button>
