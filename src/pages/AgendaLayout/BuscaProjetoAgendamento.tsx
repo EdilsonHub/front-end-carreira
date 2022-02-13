@@ -104,7 +104,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
 
 
     return (
-        <> 
+        <>
             <Box sx={{ paddingTop: 2, paddingBottom: 2 }}>
                 <Breadcrumbs aria-label="breadcrumb" component="h5" >
                     <Button key="todos_projetos_id" onClick={() => { escolherProjetoDoPath(null) }} disabled={projetoPath.length === 0} sx={{ p: 0 }}>
@@ -140,7 +140,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
                                 <TextField
                                     {...params}
                                     label={projetoAtual?.nome || 'Projetos disponíveis'}
-                                    size="small" placeholder={projetoAtual? `Escolha um subprojeto de ${projetoAtual.nome}` : 'Escolha um projeto'}
+                                    size="small" placeholder={projetoAtual ? `Escolha um subprojeto de ${projetoAtual.nome}` : 'Escolha um projeto'}
                                     fullWidth
                                 />
                             )}
@@ -158,7 +158,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
                         <DateTimePicker label="Data Final" name="fim" />
                     </Grid>
                     <Grid item xs={12} md={3} xl={2}>
-                        <Button variant="outlined" fullWidth size='large' color="primary" type="submit" startIcon={<EventIcon/>}>Agendar projeto</Button>
+                        <Button variant="outlined" fullWidth size='large' color="primary" type="submit" startIcon={<EventIcon />}>Agendar projeto</Button>
                     </Grid>
                 </Grid>
             </Form>
