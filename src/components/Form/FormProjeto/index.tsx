@@ -16,6 +16,17 @@ import {
   atualizarProjeto,
   setFalseConcluido,
 } from "../../../store/Projetos.store";
+import { salvarProjetoBancoDados } from "../../../services/Projeto.service";
+
+// "id": 44,
+// "nome": "terceiro verdadeiro projeto filho de 12 5",
+// "descricao": "Projeto para fazer o teste de insersão de testes",
+// "id_projeto_pai": null,
+// "nivel_projeto": 0,
+// "data_criacao": "2021-10-10 12:30:19",
+// "custo_previsto": 0,
+// "local_de_realizacao_previsto": null,
+// "filhos": []
 
 export interface IDadosFormulario {
   //isto deveria estar no store
@@ -82,10 +93,7 @@ const FormProjeto: React.FC = () => {
   // const [initialData, setInitialData ] = useState<IDadosFormulario>();
 
   const salvarProjeto = (dados: IDadosFormulario) => {
-    const idFalso = new Date().getTime().toString();
-    dispatch(addProjeto({ ...dados, idProjetoSuperior, id: idFalso }));
-    dispatch(setFalseConcluido(idProjetoSuperior));
-    return idFalso;
+    salvarProjetoBancoDados({ ...dados, idProjetoSuperior }, dispatch);
   };
 
   const editarProjeto = (dados: IDadosFormulario) => {
