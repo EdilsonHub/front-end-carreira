@@ -83,6 +83,7 @@ function buscarProjetosNivelZeroBancoDados(
   dados: IProjetoFrontEnd[],
   dispatch: Dispatch<any>
 ) {
+  console.log("buscarProjetosNivelZeroBancoDados");
   if (dados.length === 0) {
     api.get("projeto").then((n) => {
       n.data.data?.forEach((dado: IProjetoBackEnd) => {

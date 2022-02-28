@@ -98,7 +98,7 @@ const BuscaProjetoAgendamento: React.FC<IProps> = ({ projetosEscolhiveis: projet
             agendarProjeto(date);
             reset();
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 

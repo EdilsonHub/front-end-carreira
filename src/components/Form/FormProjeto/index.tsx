@@ -75,7 +75,6 @@ const FormProjeto: React.FC = () => {
       reset();
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        // console.log({ error, formRef })
         let mensagensErros: { [key: string]: any } = {};
         error.inner.forEach(
           (n) => (mensagensErros[n.path || "undefined"] = n.message)
@@ -111,8 +110,6 @@ const FormProjeto: React.FC = () => {
       dataLimite: inverterDiaMes(projeto.dataLimite),
     };
   };
-
-  console.log("FormProjeto foi chamado");
 
   return (
     <BoxFormulario titulo={nomeFormulario}>

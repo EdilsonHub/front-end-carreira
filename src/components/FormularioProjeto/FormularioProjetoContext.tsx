@@ -99,7 +99,6 @@ const FormularioProjetoProvider: React.FC = ({ children }) => {
         initialValues: getInitialValores(),
         validationSchema: validationSchema(),
         onSubmit: (values) => {
-            console.log(values);
             // submit({ ...values });
             formik.resetForm();
         },

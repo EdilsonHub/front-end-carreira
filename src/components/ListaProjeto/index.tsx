@@ -14,8 +14,6 @@ const ListaProjeto: React.FC<IProps> = ({
   labelBtnAddProjeto,
 }) => {
   const [idProjetoAberto, setIdProjetoAberto] = useState<string | null>(null);
-  console.log({ dados });
-
   return (
     <>
       {dados.length > 0 && (

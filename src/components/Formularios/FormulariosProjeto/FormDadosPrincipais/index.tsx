@@ -20,7 +20,6 @@ const FormDadosPrincipais: React.FC = () => {
             nome: yup.string().required('O nome do projeto está vazio')
         }),
         onSubmit: (values) => {
-            console.log(values);
             // submit({ ...values });
             formik.resetForm();
         },

@@ -31,24 +31,18 @@ const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log({handleOpenNavMenu: 'handleOpenNavMenu'})
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log({handleOpenUserMenu: 'handleOpenUserMenu'})
-
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = (path: string = "aleatorio") => () => {
-    console.log({handleCloseNavMenu: 'handleCloseNavMenu'})
     navigate(path);
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
-    console.log({handleCloseUserMenu: 'handleCloseUserMenu'})
-
     setAnchorElUser(null);
   };
 
