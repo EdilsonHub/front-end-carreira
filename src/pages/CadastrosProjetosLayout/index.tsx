@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListaProjeto from "../../components/ListaProjeto";
 import { Button, Box, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -7,6 +7,8 @@ import FormProjeto from "../../components/Form/FormProjeto";
 
 function CadastroProjetosLayout() {
   const { dados, abrirFormularioProjeto, buscarProjetosApi } = useProjeto();
+
+  useEffect(() => buscarProjetosApi());
 
   return (
     <div>
@@ -23,14 +25,6 @@ function CadastroProjetosLayout() {
         component="div"
         sx={{ paddingTop: 2, paddingBottom: 2, textAlign: "right" }}
       >
-        <Button
-          variant="outlined"
-          onClick={buscarProjetosApi}
-          startIcon={<AddIcon color="primary" />}
-          style={{ marginRight: "15px" }}
-        >
-          Buscar projetos da api
-        </Button>
         <Button
           variant="outlined"
           onClick={abrirFormularioProjeto}

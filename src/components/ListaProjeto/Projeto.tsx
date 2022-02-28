@@ -1,4 +1,4 @@
-import React, { useState, useMemo, memo } from "react";
+import React, { useState, useMemo, memo, useEffect } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -43,8 +43,6 @@ const Projeto: React.FC<IProps> = ({
     []
   );
 
-  // const { dados } = useSelector(selectProjetos);
-
   const { dados, searchProjetosBancoDados } = useProjeto();
 
   const tempoPrevistoString = montarStringTempoPrevito(tempoPrevisto);
@@ -61,22 +59,37 @@ const Projeto: React.FC<IProps> = ({
     return concluido ? "darkGrey" : "grey";
   };
 
-  const handleOnchange = () => {
-    setIdProjetoAberto((prev: string) => {
-      if (prev === id) {
-        return null;
-      }
+  const searchProjeto = async (listaProjetosFilhos: IProjeto[]) => {
+    setTimeout(
+      () =>
+        searchProjetosBancoDados(
+          listaProjetosFilhos.map((n: IProjeto) => n.id)
+        ),
+      1000
+    );
+  };
 
+  const handleOnchange = () => {
+    const idProjetoAbertoConst = idProjetoAberto;
+    setIdProjetoAberto((prev: string) => (prev === id ? null : id));
+
+    if (idProjetoAbertoConst !== id) {
       const listaProjetosFilhos = dados.filter(
         (n) => n.idProjetoSuperior && n.idProjetoSuperior === id
       );
-
       setListaProjetosFilhos(listaProjetosFilhos);
-      searchProjetosBancoDados(listaProjetosFilhos.map((n) => n.id));
-
-      return id;
-    });
+      searchProjeto(listaProjetosFilhos);
+    }
   };
+
+  useEffect(() => {
+    if (idProjetoAberto === id) {
+      const listaProjetosFilhos = dados.filter(
+        (n) => n.idProjetoSuperior && n.idProjetoSuperior === id
+      );
+      setListaProjetosFilhos(listaProjetosFilhos);
+    }
+  }, [dados]);
 
   return (
     <>
