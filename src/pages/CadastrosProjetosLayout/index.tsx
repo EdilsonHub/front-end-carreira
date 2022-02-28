@@ -6,11 +6,7 @@ import { useProjeto } from "../../hooks/useProjeto";
 import FormProjeto from "../../components/Form/FormProjeto";
 
 function CadastroProjetosLayout() {
-  const { dados, abrirFormularioProjeto } = useProjeto();
-
-  const handleOnclickAddProjeto = () => {
-    abrirFormularioProjeto();
-  };
+  const { dados, abrirFormularioProjeto, buscarProjetosApi } = useProjeto();
 
   return (
     <div>
@@ -29,7 +25,15 @@ function CadastroProjetosLayout() {
       >
         <Button
           variant="outlined"
-          onClick={handleOnclickAddProjeto}
+          onClick={buscarProjetosApi}
+          startIcon={<AddIcon color="primary" />}
+          style={{ marginRight: "15px" }}
+        >
+          Buscar projetos da api
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={abrirFormularioProjeto}
           startIcon={<AddIcon color="primary" />}
         >
           Adicionar Novo Projeto

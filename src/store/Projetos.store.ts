@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
-import { IDadosFormulario } from "../components/Form/FormProjeto";
+import { IProjeto } from "../interfaces/IProjeto";
 import { getProjetosTeste } from "./dadosTeste";
 
 // import { open } from './SwipeableDrawer.store';
 // import { store } from '../store';
 
 interface IState {
-  dados: IDadosFormulario[];
+  dados: IProjeto[];
 }
 
 const initialState: IState = {
@@ -18,15 +18,15 @@ const projetosSlice = createSlice({
   name: "projetos",
   initialState: initialState,
   reducers: {
-    addProjeto(state, action: PayloadAction<IDadosFormulario>) {
+    addProjeto(state, action: PayloadAction<IProjeto>) {
       if (
         state.dados.length === 0 ||
-        state.dados.find((n) => n.id !== action.payload.id)
+        state.dados.find((n) => n.id === action.payload.id) === undefined
       ) {
         state.dados.push(action.payload);
       }
     },
-    atualizarProjeto(state, action: PayloadAction<IDadosFormulario>) {
+    atualizarProjeto(state, action: PayloadAction<IProjeto>) {
       state.dados.forEach((projeto) => {
         if (projeto.id === action.payload.id) {
           const index = state.dados.indexOf(projeto);
@@ -66,7 +66,7 @@ const projetosSlice = createSlice({
   },
 });
 
-export type { IDadosFormulario as IProjeto };
+export type { IProjeto as IProjeto };
 export const {
   addProjeto,
   atualizarProjeto,

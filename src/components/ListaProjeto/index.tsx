@@ -1,11 +1,11 @@
 import React, { memo, useState } from "react";
-import { IDadosFormulario } from "../Form/FormProjeto";
+import { IProjeto } from "../../interfaces/IProjeto";
 import Projeto from "./Projeto";
 
 interface IProps {
   idProjetoSuperior: string;
   labelBtnAddProjeto: string;
-  dados: IDadosFormulario[];
+  dados: IProjeto[];
 }
 
 const ListaProjeto: React.FC<IProps> = ({
@@ -20,7 +20,7 @@ const ListaProjeto: React.FC<IProps> = ({
     <>
       {dados.length > 0 && (
         <div style={{ marginTop: "8px" }}>
-          {dados.map((props: IDadosFormulario, index: number) => (
+          {dados.map((props: IProjeto, index: number) => (
             <Projeto
               dadosFormulario={props}
               idProjetoAberto={idProjetoAberto}

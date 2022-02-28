@@ -8,47 +8,10 @@ import { Button, ButtonGroup, Grid } from "@mui/material";
 import * as yup from "yup";
 import DateTimePicker from "../Inputs/DateTimePicker";
 
-import { useSelector, useDispatch } from "react-redux";
-import { selectData, setVisibilidade } from "../../../store/FormProjeto.store";
-import {
-  selectProjetos,
-  addProjeto,
-  atualizarProjeto,
-  setFalseConcluido,
-} from "../../../store/Projetos.store";
-import { salvarProjetoBancoDados } from "../../../services/Projeto.service";
-
-// "id": 44,
-// "nome": "terceiro verdadeiro projeto filho de 12 5",
-// "descricao": "Projeto para fazer o teste de insersão de testes",
-// "id_projeto_pai": null,
-// "nivel_projeto": 0,
-// "data_criacao": "2021-10-10 12:30:19",
-// "custo_previsto": 0,
-// "local_de_realizacao_previsto": null,
-// "filhos": []
-
-export interface IDadosFormulario {
-  //isto deveria estar no store
-  idProjetoSuperior: string;
-  id: string;
-  nome: string;
-  custoPrevisto: string;
-  descricao: string;
-  dataLimite: string;
-  agenda: {
-    inicio: string;
-    fim: string;
-  };
-  tempoPrevisto: {
-    meses: string;
-    dias: string;
-    horas: string;
-    minutos: string;
-  };
-  grupo?: string; //para usar no autocomplete no agendamento do projeto
-  concluido?: boolean;
-}
+import { useSelector } from "react-redux";
+import { selectData } from "../../../store/FormProjeto.store";
+import { useProjeto } from "../../../hooks/useProjeto";
+import { IProjeto } from "../../../interfaces/IProjeto";
 
 const validationSchema = () => {
   return yup.object({
@@ -88,30 +51,22 @@ const FormProjeto: React.FC = () => {
     nomeFormulario,
     dados: { idProjetoSuperior, id },
   } = useSelector(selectData);
-  const projetos = useSelector(selectProjetos);
-  const dispatch = useDispatch();
-  // const [initialData, setInitialData ] = useState<IDadosFormulario>();
 
-  const salvarProjeto = (dados: IDadosFormulario) => {
-    salvarProjetoBancoDados({ ...dados, idProjetoSuperior }, dispatch);
-  };
+  const {
+    dados: projetos,
+    salvarProjetoBancoDados,
+    atualizarProjetoBancoDados,
+    fecharFormularioProjeto,
+  } = useProjeto();
 
-  const editarProjeto = (dados: IDadosFormulario) => {
-    dispatch(atualizarProjeto({ ...dados, idProjetoSuperior, id }));
-    dispatch(setVisibilidade(false));
-  };
-
-  const salvar = (dados: IDadosFormulario) => {
+  const salvar = (dados: IProjeto) => {
     if (!id) {
-      return salvarProjeto(dados);
+      return salvarProjetoBancoDados({ ...dados, idProjetoSuperior });
     }
-    return editarProjeto(dados);
+    return atualizarProjetoBancoDados(id, { ...dados, idProjetoSuperior });
   };
 
-  const handleSubmit: SubmitHandler<IDadosFormulario> = async (
-    data,
-    { reset }
-  ) => {
+  const handleSubmit: SubmitHandler<IProjeto> = async (data, { reset }) => {
     try {
       const schema = validationSchema();
       await schema.validate(data, { abortEarly: false });
@@ -134,7 +89,7 @@ const FormProjeto: React.FC = () => {
     if (!id) {
       return {};
     }
-    const projetoArray = projetos.dados.filter((n) => n.id === id);
+    const projetoArray = projetos.filter((n) => n.id === id);
     if (projetoArray.length === 0) {
       return {};
     }
@@ -155,10 +110,6 @@ const FormProjeto: React.FC = () => {
       },
       dataLimite: inverterDiaMes(projeto.dataLimite),
     };
-  };
-
-  const handleOnclikLeft = () => {
-    dispatch(setVisibilidade(false));
   };
 
   console.log("FormProjeto foi chamado");
@@ -219,7 +170,7 @@ const FormProjeto: React.FC = () => {
         />
         <DateTimePicker label="Data limite" name="dataLimite" />
 
-        <Scope path="agenda">
+        {/* <Scope path="agenda">
           <Grid container spacing="15">
             <Grid item xs={6}>
               <DateTimePicker label="Inicio Agenda" name="inicio" />
@@ -228,7 +179,7 @@ const FormProjeto: React.FC = () => {
               <DateTimePicker label="Fim Agenda" name="fim" />
             </Grid>
           </Grid>
-        </Scope>
+        </Scope> */}
 
         <ButtonGroup
           sx={{ m: 1 }}
@@ -238,7 +189,7 @@ const FormProjeto: React.FC = () => {
           size="medium"
           aria-label="medium secondary button group"
         >
-          <Button onClick={handleOnclikLeft} color="warning">
+          <Button onClick={fecharFormularioProjeto} color="warning">
             Cancelar
           </Button>
           <Button color="primary" type="submit">

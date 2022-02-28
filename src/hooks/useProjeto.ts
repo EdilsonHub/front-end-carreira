@@ -1,104 +1,143 @@
 import { Dispatch } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IDadosFormulario } from "../components/Form/FormProjeto";
+import {
+  convertProjetoFrontEndToBackEnd,
+  convertProjetoBackEndToFrontEnd,
+} from "../helpers/utilsHelper";
 import api from "../services/api";
 import {
   setIdProjeto,
   setIdProjetoSuperior,
   setVisibilidade,
   setNomeFormulario,
+  clearDadosFormulario,
 } from "../store/FormProjeto.store";
-import { addProjeto, selectProjetos } from "../store/Projetos.store";
+import {
+  addProjeto,
+  atualizarProjeto,
+  selectProjetos,
+} from "../store/Projetos.store";
+
+import { IProjeto as IProjetoBackEnd } from "./../interfaces/responsesHttp/IProjeto";
+import { IProjeto as IProjetoFrontEnd } from "../interfaces/IProjeto";
 
 export function useProjeto() {
   const { dados } = useSelector(selectProjetos);
   const dispatch = useDispatch();
 
-  buscarProjetosNivelZeroBancoDados(dados, dispatch);
+  const abrirFormularioProjeto = () => {
+    _abrirFormularioProjeto(dispatch);
+  };
+
+  const salvarProjetoBancoDados = (projeto: IProjetoFrontEnd) => {
+    _salvarProjetoBancoDados(projeto, dispatch);
+  };
+
+  const atualizarProjetoBancoDados = (
+    id: string,
+    projeto: IProjetoFrontEnd
+  ) => {
+    _atualizarProjetoBancoDados(id, projeto, dispatch);
+  };
+
+  const buscarProjetosApi = () => {
+    buscarProjetosNivelZeroBancoDados(dados, dispatch);
+  };
+
+  const fecharFormularioProjeto = () => {
+    dispatch(setVisibilidade(false));
+  };
+
+  const searchProjetosBancoDados = (ids: string[]) => {
+    // const idsEncontratosFrontEnd = dados
+    //   .filter((n) => ids.includes(n.id))
+    //   .map((n) => n.id);
+    // _searchProjetosBancoDados(
+    //   ids
+    //     .map((n) => (!idsEncontratosFrontEnd.includes(n) ? n : null))
+    //     .filter((n) => n),
+    //   dispatch
+    // );
+    _searchProjetosBancoDados(ids, dispatch);
+  };
+
   return {
     dados,
-    abrirFormularioProjeto: abrirFormularioProjeto(dispatch),
+    abrirFormularioProjeto,
     salvarProjetoBancoDados,
+    atualizarProjetoBancoDados,
+    buscarProjetosApi,
+    fecharFormularioProjeto,
+    searchProjetosBancoDados,
   };
 }
 
-function abrirFormularioProjeto(dispatch: Dispatch<any>) {
-  return () => {
-    dispatch(setIdProjeto(""));
-    dispatch(setIdProjetoSuperior(""));
-    dispatch(setNomeFormulario(`Cadastrar Novo Projeto`));
-    dispatch(setVisibilidade(true));
-  };
+function _abrirFormularioProjeto(dispatch: Dispatch<any>) {
+  dispatch(setIdProjeto(""));
+  dispatch(setIdProjetoSuperior(""));
+  dispatch(setNomeFormulario(`Cadastrar Novo Projeto`));
+  dispatch(setVisibilidade(true));
 }
 
-interface IDadosProjetoBackEnd {
-  custo_previsto: number;
-  data_criacao: string;
-  descricao: string;
-  filhos: [];
-  id: number;
-  id_projeto_pai: number;
-  local_de_realizacao_previsto: null;
-  nivel_projeto: number;
-  nome: string;
-}
-
-export function buscarProjetosNivelZeroBancoDados(
-  dados: IDadosFormulario[],
+function buscarProjetosNivelZeroBancoDados(
+  dados: IProjetoFrontEnd[],
   dispatch: Dispatch<any>
 ) {
   if (dados.length === 0) {
     api.get("projeto").then((n) => {
-      n.data.data?.forEach((dados: IDadosProjetoBackEnd) =>
-        dispatch(addProjeto(convertObjProjetoBackEndFrontEnd(dados)))
-      );
+      n.data.data?.forEach((dado: IProjetoBackEnd) => {
+        dispatch(addProjeto(convertProjetoBackEndToFrontEnd(dado)));
+        dado.filhos.forEach((nn: IProjetoBackEnd) => {
+          dispatch(addProjeto(convertProjetoBackEndToFrontEnd(nn)));
+        });
+      });
     });
   }
 }
 
-export function salvarProjetoBancoDados(
-  dados: IDadosFormulario,
+function _salvarProjetoBancoDados(
+  dados: IProjetoFrontEnd,
   dispatch: Dispatch<any>
 ) {
   api
-    .post("projeto", convertProjetoFrontToCreateEndBackEnd(dados))
+    .post("projeto", convertProjetoFrontEndToBackEnd(dados))
     .then((n) => {
-      dispatch(addProjeto(convertObjProjetoBackEndFrontEnd(n.data)));
+      dispatch(addProjeto(convertProjetoBackEndToFrontEnd(n.data)));
+      dispatch(clearDadosFormulario());
     })
     .catch((e) => console.log({ e }));
 }
 
-function convertProjetoFrontToCreateEndBackEnd(dados: IDadosFormulario) {
-  return {
-    nome: dados.nome,
-    descricao: dados.descricao,
-    id_projeto_pai: dados.idProjetoSuperior,
-    // nivel_projeto: null,
-    // data_criacao: null,
-    // data_inicio_execucao: null,
-    // data_conclusao: null,
-    // custo_previsto: null,
-    // local_de_realizacao_previsto: null
-  };
+function _atualizarProjetoBancoDados(
+  id: string,
+  dados: IProjetoFrontEnd,
+  dispatch: Dispatch<any>
+) {
+  api
+    .put(`projeto/${id}`, convertProjetoFrontEndToBackEnd(dados))
+    .then((n) => {
+      dispatch(atualizarProjeto(convertProjetoBackEndToFrontEnd(n.data)));
+      dispatch(setVisibilidade(false));
+    })
+    .catch((e) => console.log({ e }));
 }
 
-function convertObjProjetoBackEndFrontEnd(dados: IDadosProjetoBackEnd) {
-  return {
-    nome: dados.nome,
-    descricao: dados.descricao,
-    custoPrevisto: dados.custo_previsto + "",
-    dataLimite: "",
-    tempoPrevisto: {
-      meses: "",
-      dias: "",
-      horas: "",
-      minutos: "",
-    },
-    agenda: {
-      inicio: "",
-      fim: "",
-    },
-    idProjetoSuperior: (dados.id_projeto_pai || "") + "",
-    id: dados.id + "",
-  };
+function _searchProjetosBancoDados(
+  ids: (string | null)[],
+  dispatch: Dispatch<any>
+) {
+  ids.forEach((id) => {
+    if (!id) {
+      return true;
+    }
+    api
+      .get(`projeto/${id}`)
+      .then((n) => {
+        dispatch(addProjeto(convertProjetoBackEndToFrontEnd(n.data)));
+        n.data.filhos.forEach((dataFilho: IProjetoBackEnd) => {
+          dispatch(addProjeto(convertProjetoBackEndToFrontEnd(dataFilho)));
+        });
+      })
+      .catch((e) => console.log({ e }));
+  });
 }
