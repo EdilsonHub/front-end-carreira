@@ -16,6 +16,7 @@ import {
   addProjeto,
   atualizarProjeto,
   selectProjetos,
+  removeProjeto,
 } from "../store/Projetos.store";
 
 import { IProjeto as IProjetoBackEnd } from "./../interfaces/responsesHttp/IProjeto";
@@ -25,50 +26,54 @@ export function useProjeto() {
   const { dados } = useSelector(selectProjetos);
   const dispatch = useDispatch();
 
-  const abrirFormularioProjeto = () => {
+  const cadastrarProjeto = () => {
     _abrirFormularioProjeto(dispatch);
   };
 
-  const salvarProjetoBancoDados = (projeto: IProjetoFrontEnd) => {
+  const salvar = (projeto: IProjetoFrontEnd) => {
     _salvarProjetoBancoDados(projeto, dispatch);
   };
 
-  const atualizarProjetoBancoDados = (
-    id: string,
-    projeto: IProjetoFrontEnd
-  ) => {
+  const atualizar = (id: string, projeto: IProjetoFrontEnd) => {
     _atualizarProjetoBancoDados(id, projeto, dispatch);
   };
 
-  const buscarProjetosApi = () => {
+  const buscarNivelZero = () => {
     buscarProjetosNivelZeroBancoDados(dados, dispatch);
   };
 
-  const fecharFormularioProjeto = () => {
+  const fechar = () => {
     dispatch(setVisibilidade(false));
   };
 
-  const searchProjetosBancoDados = (ids: string[]) => {
-    // const idsEncontratosFrontEnd = dados
-    //   .filter((n) => ids.includes(n.id))
-    //   .map((n) => n.id);
-    // _searchProjetosBancoDados(
-    //   ids
-    //     .map((n) => (!idsEncontratosFrontEnd.includes(n) ? n : null))
-    //     .filter((n) => n),
-    //   dispatch
-    // );
+  const buscar = (ids: string[]) => {
     _searchProjetosBancoDados(ids, dispatch);
+  };
+  const remover = (idProjeto: string) => {
+    _deleteProjetoBancoDados(idProjeto, dispatch);
+  };
+  const editar = (idProjeto: string, nomeProjeto: string) => {
+    _abrirFormularioEdicaoProjeto(idProjeto, nomeProjeto, dispatch);
+  };
+  const cadastrarSubProjeto = (idProjeto: string, nomeProjeto: string) => {
+    _abriFormularioSubProjeto(idProjeto, nomeProjeto, dispatch);
   };
 
   return {
-    dados,
-    abrirFormularioProjeto,
-    salvarProjetoBancoDados,
-    atualizarProjetoBancoDados,
-    buscarProjetosApi,
-    fecharFormularioProjeto,
-    searchProjetosBancoDados,
+    formulario: {
+      cadastrarProjeto,
+      cadastrarSubProjeto,
+      editar,
+      fechar,
+    },
+    projetos: {
+      dados,
+      salvar,
+      atualizar,
+      buscar,
+      remover,
+      buscarNivelZero,
+    },
   };
 }
 
@@ -76,6 +81,28 @@ function _abrirFormularioProjeto(dispatch: Dispatch<any>) {
   dispatch(setIdProjeto(""));
   dispatch(setIdProjetoSuperior(""));
   dispatch(setNomeFormulario(`Cadastrar Novo Projeto`));
+  dispatch(setVisibilidade(true));
+}
+
+function _abriFormularioSubProjeto(
+  idProjeto: string,
+  nomeProjeto: string,
+  dispatch: Dispatch<any>
+) {
+  dispatch(setIdProjeto(""));
+  dispatch(setIdProjetoSuperior(idProjeto));
+  dispatch(setNomeFormulario(`Cadastrar subprojeto: ${nomeProjeto}`));
+  dispatch(setVisibilidade(true));
+}
+
+function _abrirFormularioEdicaoProjeto(
+  idProjeto: string,
+  nomeProjeto: string,
+  dispatch: Dispatch<any>
+) {
+  dispatch(setIdProjetoSuperior(""));
+  dispatch(setIdProjeto(idProjeto));
+  dispatch(setNomeFormulario(`Editar: ${nomeProjeto}`));
   dispatch(setVisibilidade(true));
 }
 
@@ -141,4 +168,15 @@ function _searchProjetosBancoDados(
       })
       .catch((e) => console.log({ e }));
   });
+}
+
+function _deleteProjetoBancoDados(idProjeto: string, dispatch: Dispatch<any>) {
+  api
+    .delete(`projeto/${idProjeto}`)
+    .then((n) => {
+      // if (Array.isArray(n) && n.length === 0) {
+      dispatch(removeProjeto(idProjeto));
+      // }
+    })
+    .catch((e) => console.log({ e }));
 }

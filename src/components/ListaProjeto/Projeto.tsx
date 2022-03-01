@@ -43,7 +43,9 @@ const Projeto: React.FC<IProps> = ({
     []
   );
 
-  const { dados, searchProjetosBancoDados } = useProjeto();
+  const {
+    projetos: { dados, buscar: buscarProjetos },
+  } = useProjeto();
 
   const tempoPrevistoString = montarStringTempoPrevito(tempoPrevisto);
   const agendaString = montarStringAgenda(agenda);
@@ -61,10 +63,7 @@ const Projeto: React.FC<IProps> = ({
 
   const searchProjeto = async (listaProjetosFilhos: IProjeto[]) => {
     setTimeout(
-      () =>
-        searchProjetosBancoDados(
-          listaProjetosFilhos.map((n: IProjeto) => n.id)
-        ),
+      () => buscarProjetos(listaProjetosFilhos.map((n: IProjeto) => n.id)),
       1000
     );
   };

@@ -6,9 +6,12 @@ import { useProjeto } from "../../hooks/useProjeto";
 import FormProjeto from "../../components/Form/FormProjeto";
 
 function CadastroProjetosLayout() {
-  const { dados, abrirFormularioProjeto, buscarProjetosApi } = useProjeto();
+  const {
+    projetos: { dados, buscarNivelZero },
+    formulario: { cadastrarProjeto },
+  } = useProjeto();
 
-  useEffect(() => buscarProjetosApi());
+  useEffect(() => buscarNivelZero());
 
   return (
     <div>
@@ -27,7 +30,7 @@ function CadastroProjetosLayout() {
       >
         <Button
           variant="outlined"
-          onClick={abrirFormularioProjeto}
+          onClick={cadastrarProjeto}
           startIcon={<AddIcon color="primary" />}
         >
           Adicionar Novo Projeto

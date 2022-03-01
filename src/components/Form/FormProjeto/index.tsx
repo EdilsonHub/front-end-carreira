@@ -53,17 +53,19 @@ const FormProjeto: React.FC = () => {
   } = useSelector(selectData);
 
   const {
-    dados: projetos,
-    salvarProjetoBancoDados,
-    atualizarProjetoBancoDados,
-    fecharFormularioProjeto,
+    projetos: {
+      dados: projetos,
+      salvar: salvarProjeto,
+      atualizar: atualizarProjeto,
+    },
+    formulario: { fechar: fecharFormularioCadastroProjetos },
   } = useProjeto();
 
   const salvar = (dados: IProjeto) => {
     if (!id) {
-      return salvarProjetoBancoDados({ ...dados, idProjetoSuperior });
+      return salvarProjeto({ ...dados, idProjetoSuperior });
     }
-    return atualizarProjetoBancoDados(id, { ...dados, idProjetoSuperior });
+    return atualizarProjeto(id, { ...dados, idProjetoSuperior });
   };
 
   const handleSubmit: SubmitHandler<IProjeto> = async (data, { reset }) => {
@@ -186,7 +188,7 @@ const FormProjeto: React.FC = () => {
           size="medium"
           aria-label="medium secondary button group"
         >
-          <Button onClick={fecharFormularioProjeto} color="warning">
+          <Button onClick={fecharFormularioCadastroProjetos} color="warning">
             Cancelar
           </Button>
           <Button color="primary" type="submit">
