@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, Fragment, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   convertProjetoFrontEndToBackEnd,
@@ -19,45 +19,86 @@ import {
   removeProjeto,
 } from "../store/Projetos.store";
 
+import {
+  OptionsObject,
+  SnackbarKey,
+  SnackbarMessage,
+  useSnackbar,
+} from "notistack";
+
 import { IProjeto as IProjetoBackEnd } from "./../interfaces/responsesHttp/IProjeto";
 import { IProjeto as IProjetoFrontEnd } from "../interfaces/IProjeto";
+import { IEnqueueSnackbar } from "../interfaces/IEnqueueSnackbar";
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 export function useProjeto() {
   const { dados } = useSelector(selectProjetos);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const cadastrarProjeto = () => {
+  const alertSnackBar: IEnqueueSnackbar = useCallback(
+    (message: SnackbarMessage, option?: OptionsObject | null | undefined) => {
+      const defaultOption = {
+        action: (key: SnackbarKey | undefined) => (
+          <IconButton
+            aria-label="close"
+            size="small"
+            onClick={() => closeSnackbar(key)}
+            style={{ color: "#FFF" }}
+          >
+            <CloseIcon fontSize="inherit" />
+          </IconButton>
+        ),
+      };
+      if (!option) {
+        option = defaultOption;
+      } else {
+        option = { ...defaultOption, ...option };
+      }
+      return enqueueSnackbar(message, option);
+    },
+    []
+  );
+
+  const cadastrarProjeto = useCallback(() => {
     _abrirFormularioProjeto(dispatch);
-  };
+  }, []);
 
-  const salvar = (projeto: IProjetoFrontEnd) => {
-    _salvarProjetoBancoDados(projeto, dispatch);
-  };
+  const salvar = useCallback((projeto: IProjetoFrontEnd) => {
+    _salvarProjetoBancoDados(projeto, dispatch, alertSnackBar);
+  }, []);
 
-  const atualizar = (id: string, projeto: IProjetoFrontEnd) => {
+  const atualizar = useCallback((id: string, projeto: IProjetoFrontEnd) => {
     _atualizarProjetoBancoDados(id, projeto, dispatch);
-  };
+  }, []);
 
-  const buscarNivelZero = () => {
+  const buscarNivelZero = useCallback(() => {
     buscarProjetosNivelZeroBancoDados(dados, dispatch);
-  };
+  }, [dados]);
 
-  const fechar = () => {
+  const fechar = useCallback(() => {
     dispatch(setVisibilidade(false));
-  };
+  }, []);
 
-  const buscar = (ids: string[]) => {
+  const buscar = useCallback((ids: string[]) => {
     _searchProjetosBancoDados(ids, dispatch);
-  };
-  const remover = (idProjeto: string) => {
+  }, []);
+
+  const remover = useCallback((idProjeto: string) => {
     _deleteProjetoBancoDados(idProjeto, dispatch);
-  };
-  const editar = (idProjeto: string, nomeProjeto: string) => {
+  }, []);
+
+  const editar = useCallback((idProjeto: string, nomeProjeto: string) => {
     _abrirFormularioEdicaoProjeto(idProjeto, nomeProjeto, dispatch);
-  };
-  const cadastrarSubProjeto = (idProjeto: string, nomeProjeto: string) => {
-    _abriFormularioSubProjeto(idProjeto, nomeProjeto, dispatch);
-  };
+  }, []);
+
+  const cadastrarSubProjeto = useCallback(
+    (idProjeto: string, nomeProjeto: string) => {
+      _abriFormularioSubProjeto(idProjeto, nomeProjeto, dispatch);
+    },
+    []
+  );
 
   return {
     formulario: {
@@ -125,13 +166,17 @@ function buscarProjetosNivelZeroBancoDados(
 
 function _salvarProjetoBancoDados(
   dados: IProjetoFrontEnd,
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any>,
+  alertSnackBar: IEnqueueSnackbar
 ) {
   api
     .post("projeto", convertProjetoFrontEndToBackEnd(dados))
     .then((n) => {
       dispatch(addProjeto(convertProjetoBackEndToFrontEnd(n.data)));
       dispatch(clearDadosFormulario());
+      alertSnackBar(`Projeto ${n.data.nome} salvo sucesso!`, {
+        variant: "success",
+      });
     })
     .catch((e) => console.log({ e }));
 }

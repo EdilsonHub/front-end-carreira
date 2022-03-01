@@ -9,6 +9,8 @@ import { ptBR } from "date-fns/locale";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import { Counter } from "./components/Counter";
 
+import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
+
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 const NotFound = () => (
@@ -36,17 +38,19 @@ const NotFound = () => (
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
-      <BrowserRouter>
-        <ResponsiveAppBar />
-        <Box sx={{ m: 2 }}>
-          <Routes>
-            <Route path="/" element={<CadastroProjetosLayout />} />
-            <Route path="/agendas" element={<AgendaLayout />} />
-            <Route path="/counter" element={<Counter />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Box>
-      </BrowserRouter>
+      <SnackbarProvider maxSnack={3}>
+        <BrowserRouter>
+          <ResponsiveAppBar />
+          <Box sx={{ m: 2 }}>
+            <Routes>
+              <Route path="/" element={<CadastroProjetosLayout />} />
+              <Route path="/agendas" element={<AgendaLayout />} />
+              <Route path="/counter" element={<Counter />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Box>
+        </BrowserRouter>
+      </SnackbarProvider>
     </LocalizationProvider>
   );
 }
