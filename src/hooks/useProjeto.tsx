@@ -70,11 +70,11 @@ export function useProjeto() {
   }, []);
 
   const atualizar = useCallback((id: string, projeto: IProjetoFrontEnd) => {
-    _atualizarProjetoBancoDados(id, projeto, dispatch);
+    _atualizarProjetoBancoDados(id, projeto, dispatch, alertSnackBar);
   }, []);
 
   const buscarNivelZero = useCallback(() => {
-    buscarProjetosNivelZeroBancoDados(dados, dispatch);
+    buscarProjetosNivelZeroBancoDados(dados, dispatch, alertSnackBar);
   }, [dados]);
 
   const fechar = useCallback(() => {
@@ -82,11 +82,11 @@ export function useProjeto() {
   }, []);
 
   const buscar = useCallback((ids: string[]) => {
-    _searchProjetosBancoDados(ids, dispatch);
+    _searchProjetosBancoDados(ids, dispatch, alertSnackBar);
   }, []);
 
   const remover = useCallback((idProjeto: string) => {
-    _deleteProjetoBancoDados(idProjeto, dispatch);
+    _deleteProjetoBancoDados(idProjeto, dados, dispatch, alertSnackBar);
   }, []);
 
   const editar = useCallback((idProjeto: string, nomeProjeto: string) => {
@@ -149,18 +149,21 @@ function _abrirFormularioEdicaoProjeto(
 
 function buscarProjetosNivelZeroBancoDados(
   dados: IProjetoFrontEnd[],
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any>,
+  alertSnackBar: IEnqueueSnackbar
 ) {
-  console.log("buscarProjetosNivelZeroBancoDados");
   if (dados.length === 0) {
-    api.get("projeto").then((n) => {
-      n.data.data?.forEach((dado: IProjetoBackEnd) => {
-        dispatch(addProjeto(convertProjetoBackEndToFrontEnd(dado)));
-        dado.filhos.forEach((nn: IProjetoBackEnd) => {
-          dispatch(addProjeto(convertProjetoBackEndToFrontEnd(nn)));
+    api
+      .get("projeto")
+      .then((n) => {
+        n.data.data?.forEach((dado: IProjetoBackEnd) => {
+          dispatch(addProjeto(convertProjetoBackEndToFrontEnd(dado)));
+          dado.filhos.forEach((nn: IProjetoBackEnd) => {
+            dispatch(addProjeto(convertProjetoBackEndToFrontEnd(nn)));
+          });
         });
-      });
-    });
+      })
+      .catch(snackbarResponseError(alertSnackBar));
   }
 }
 
@@ -172,32 +175,38 @@ function _salvarProjetoBancoDados(
   api
     .post("projeto", convertProjetoFrontEndToBackEnd(dados))
     .then((n) => {
+      console.log({ n });
       dispatch(addProjeto(convertProjetoBackEndToFrontEnd(n.data)));
       dispatch(clearDadosFormulario());
       alertSnackBar(`Projeto ${n.data.nome} salvo sucesso!`, {
         variant: "success",
       });
     })
-    .catch((e) => console.log({ e }));
+    .catch(snackbarResponseError(alertSnackBar));
 }
 
 function _atualizarProjetoBancoDados(
   id: string,
   dados: IProjetoFrontEnd,
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any>,
+  alertSnackBar: IEnqueueSnackbar
 ) {
   api
     .put(`projeto/${id}`, convertProjetoFrontEndToBackEnd(dados))
     .then((n) => {
       dispatch(atualizarProjeto(convertProjetoBackEndToFrontEnd(n.data)));
       dispatch(setVisibilidade(false));
+      alertSnackBar(`Projeto ${n.data.nome} atualizado sucesso!`, {
+        variant: "success",
+      });
     })
-    .catch((e) => console.log({ e }));
+    .catch(snackbarResponseError(alertSnackBar));
 }
 
 function _searchProjetosBancoDados(
   ids: (string | null)[],
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any>,
+  alertSnackBar: IEnqueueSnackbar
 ) {
   ids.forEach((id) => {
     if (!id) {
@@ -211,17 +220,50 @@ function _searchProjetosBancoDados(
           dispatch(addProjeto(convertProjetoBackEndToFrontEnd(dataFilho)));
         });
       })
-      .catch((e) => console.log({ e }));
+      .catch(snackbarResponseError(alertSnackBar));
   });
 }
 
-function _deleteProjetoBancoDados(idProjeto: string, dispatch: Dispatch<any>) {
+function _deleteProjetoBancoDados(
+  idProjeto: string,
+  dados: IProjetoFrontEnd[],
+  dispatch: Dispatch<any>,
+  alertSnackBar: IEnqueueSnackbar
+) {
+  const projeto = dados.find((n) => n.id === idProjeto);
   api
     .delete(`projeto/${idProjeto}`)
     .then((n) => {
-      // if (Array.isArray(n) && n.length === 0) {
       dispatch(removeProjeto(idProjeto));
-      // }
+      alertSnackBar(`O projeto ${projeto?.nome} removido com sucesso!`, {
+        variant: "success",
+      });
     })
-    .catch((e) => console.log({ e }));
+    .catch(snackbarResponseError(alertSnackBar));
+  return true;
+}
+
+function snackbarResponseError(alertSnackBar: IEnqueueSnackbar) {
+  return (e: any) => {
+    const bar = (error: string[]) => {
+      if (!error || !Array.isArray(error)) {
+        return false;
+      }
+      error.forEach((mensagemError: string) => {
+        alertSnackBar(mensagemError, {
+          variant: "error",
+        });
+      });
+      return true;
+    };
+
+    const error = e?.response?.data?.error;
+    const errors = e?.response?.data?.errors;
+
+    if (!bar(error)) {
+      for (const prop in errors) {
+        bar(errors[prop]);
+      }
+    }
+  };
 }
